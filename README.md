@@ -42,13 +42,13 @@ node {
     }
 }
 ```
-<img src="images/slack.png" width="400">
+<img src="images/slack.png" width="900">
 
 Jenkins Approved Job:
-<img src="images/proceed.png" width="200">
+<img src="images/proceed.png" width="500">
 
 Jenkins Aborted Job:
-<img src="images/abort.png" width="200">
+<img src="images/abort.png" width="500">
 
 ## Hubot Setup
 
