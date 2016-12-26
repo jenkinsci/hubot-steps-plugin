@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <f:entry title="Message" field="message">
+    <f:expandableTextbox/>
+  </f:entry>
+  <f:entry field="room" title="Room">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="URL" title="URL">
+    <f:textbox/>
+  </f:entry>
+  <f:entry field="failOnError">
+  	<f:checkbox title="Fail On Error" default="false"/>
+  </f:entry>
+</j:jelly>

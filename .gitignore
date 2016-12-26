@@ -1,0 +1,17 @@
+/target
+/lib
+/classes
+/checkouts
+/bin
+pom.xml.asc
+*.jar
+*.class
+*.iml
+.idea
+**/target
+**/checkouts
+*.*~
+*.project
+*.settings
+*.classpath
+.DS_Store
