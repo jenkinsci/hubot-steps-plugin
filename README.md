@@ -52,4 +52,13 @@ Jenkins Aborted Job:
 
 ## Hubot Setup
 
-TODO...
+#### New to hubot? 
+
+Refer to [hubot-base](https://github.com/ThoughtsLive/hubot-base) to setup a either docker container or to run it locally. 
+
+#### Already running hubot.
+
+Then just copy over following scripts from [hubot-base](https://github.com/ThoughtsLive/hubot-base) repo. 
+
+* [hubot](https://github.com/ThoughtsLive/hubot-base/blob/master/scripts/hubot.coffee)
+* [jenkins](https://github.com/ThoughtsLive/hubot-base/blob/master/scripts/jenkins.coffee)
