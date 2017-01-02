@@ -1,19 +1,15 @@
 package org.thoughtslive.jenkins.plugins.hubot.steps;
 
-import static org.thoughtslive.jenkins.plugins.hubot.util.Common.log;
-import static org.thoughtslive.jenkins.plugins.hubot.util.Common.verifyCommon;
-
 import java.net.URL;
 
 import javax.inject.Inject;
 
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
-import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
 import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
+import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
+import org.thoughtslive.jenkins.plugins.hubot.util.HubotAbstractSynchronousNonBlockingStepExecution;
 
-import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Util;
@@ -22,7 +18,7 @@ import hudson.model.TaskListener;
 /**
  * Sends a message to hubot
  */
-public class SendStep extends BasicStep {
+public class SendStep extends BasicHubotStep {
 	private static final long serialVersionUID = 2327375640378098562L;
 
 	@DataBoundConstructor
@@ -49,7 +45,7 @@ public class SendStep extends BasicStep {
 		}
 	}
 
-	public static class Execution extends AbstractSynchronousNonBlockingStepExecution<Boolean> {
+	public static class Execution extends HubotAbstractSynchronousNonBlockingStepExecution<Boolean> {
 
 		private static final long serialVersionUID = -821037959812310749L;
 
@@ -65,21 +61,17 @@ public class SendStep extends BasicStep {
 		@Override
 		protected Boolean run() throws Exception {
 
-			final String url = Util.fixEmpty(step.getUrl()) == null ? envVars.get("HUBOT_URL") : step.getUrl();
 			final String room = Util.fixEmpty(step.getRoom()) == null ? "#" + envVars.get("HUBOT_DEFAULT_ROOM") : "#" + step.getRoom();
 			final URL buildUrl = new URL(envVars.get("BUILD_URL"));
 
-			if (!verifyCommon(envVars, step, listener)) {
-				return false;
+			ResponseData<Void> response = verifyCommon(step, listener, envVars);
+
+			if (response == null) {
+				logger.println("Hubot: ROOM - " + room + " - Message - " + step.getMessage());
+				response = hubotService.sendMessage(room, "Job: " + buildUrl.toString() + "\n\n" + step.getMessage());
 			}
-			try {
-				log(listener, "Hubot: ROOM - " + room + " - Message - " + step.getMessage());
-				final HubotService hubotService = new HubotService(url);
-				hubotService.sendMessage(room, "Job: " + buildUrl.toString() + "\n\n" + step.getMessage());
-				return true;
-			} catch (final Exception e) {
-				throw new AbortException("Error while sending message: "+ e.getMessage());
-			}
+
+			return logResponse(response).isSuccessful();
 		}
 	}
 }

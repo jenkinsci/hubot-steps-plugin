@@ -1,16 +1,38 @@
 package org.thoughtslive.jenkins.plugins.hubot.util;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
-import org.thoughtslive.jenkins.plugins.hubot.steps.BasicStep;
+import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 
-import hudson.AbortException;
 import hudson.EnvVars;
-import hudson.Util;
-import hudson.model.TaskListener;
+import retrofit2.Response;
 
+/**
+ * Common utility functions.
+ * 
+ * @author Naresh Rayapati
+ *
+ */
 public class Common {
 
+	/**
+	 * Empty check for string.
+	 * 
+	 * @param str
+	 * @return true if given string is null or empty.
+	 */
+	public static boolean empty(final String str) {
+		return str == null || str.trim().isEmpty();
+	}
+
+	/**
+	 * Attaches the "/" at end of given url.
+	 * 
+	 * @param url
+	 *            url as a string.
+	 * @return url which ends with "/"
+	 */
 	public static String sanitizeURL(String url) {
 		if (!url.endsWith("/")) {
 			url = url + "/";
@@ -18,50 +40,90 @@ public class Common {
 		return url;
 	}
 
-	public static void log(TaskListener listener, Object message) {
-		if (listener != null) {
-			PrintStream logger = listener.getLogger();
-			if (logger != null) {
-				logger.println(message);
-			}
+	/**
+	 * Write a message to the given print stream.
+	 * 
+	 * @param logger
+	 *            {@link PrintStream}
+	 * @param message
+	 *            to log.
+	 */
+	public static void log(final PrintStream logger, final Object message) {
+		if (logger != null) {
+			logger.println(message);
 		}
 	}
 
-	public static boolean verifyCommon(final EnvVars envVars, final BasicStep step, final TaskListener listener) throws AbortException {
+	public static String getJobName(final EnvVars envVars) {
+		return envVars.get("JOB_NAME");
+	}
 
-		boolean failOnError = false;
-		String errorMessage = null;
-		final String url = Util.fixEmpty(step.getUrl()) == null ? envVars.get("HUBOT_URL") : step.getUrl();
-		final String room = Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
-		final String message = step.getMessage();
+	/**
+	 * Returns build number from the given Environemnt Vars.
+	 * 
+	 * @param logger
+	 *            {@link PrintStream}
+	 * @param envVars
+	 *            {@link EnvVars}
+	 * @return build number of current job.
+	 */
+	public static String getBuildNumber(final PrintStream logger, final EnvVars envVars) {
+		String answer = envVars.get("BUILD_NUMBER");
+		if (answer == null) {
+			log(logger, "No BUILD_NUMBER!");
+			return "1";
+		}
+		return answer;
+	}
 
-		if (Util.fixEmpty(envVars.get("HUBOT_FAIL_ON_ERROR")) == null) {
-			failOnError = step.isFailOnError();
+	/**
+	 * Converts Retrofit's {@link Response} to {@link ResponseData}
+	 * 
+	 * @param response
+	 *            instance of {@link Response}
+	 * @return an instance of {@link ResponseData}
+	 * @throws IOException
+	 */
+	public static <T> ResponseData<T> parseResponse(final Response<T> response) throws IOException {
+		final ResponseData<T> resData = new ResponseData<T>();
+		resData.setSuccessful(response.isSuccessful());
+		resData.setCode(response.code());
+		resData.setMessage(response.message());
+		if (!response.isSuccessful()) {
+			final String errorMessage = response.errorBody().string();
+			resData.setError(errorMessage);
 		} else {
-			failOnError = Boolean.getBoolean(envVars.get("HUBOT_FAIL_ON_ERROR"));
+			resData.setData(response.body());
 		}
+		return resData;
+	}
 
-		if (Util.fixEmpty(url) == null) {
-			errorMessage = "Hubot: HUBOT_URL is empty or null.";
-		}
+	/**
+	 * Builds error response from the given exception.
+	 * 
+	 * @param e
+	 *            instance of {@link Exception}
+	 * @return an instance of {@link ResponseData}
+	 */
+	public static <T> ResponseData<T> buildErrorResponse(final Exception e) {
+		final ResponseData<T> resData = new ResponseData<T>();
+		final String errorMessage = getRootCause(e).getMessage();
+		resData.setSuccessful(false);
+		resData.setCode(-1);
+		resData.setError(errorMessage);
+		e.printStackTrace();
+		return resData;
+	}
 
-		if (Util.fixEmpty(room) == null)  {
-			errorMessage = "Hubot: Room - empty or null";
-		}
-
-		if (Util.fixEmpty(message) == null) {
-			errorMessage = "Hubot: Message - empty or null";
-		}
-
-		if (errorMessage != null) {
-			log(listener, errorMessage);
-			if (failOnError) {
-				throw new AbortException(errorMessage);
-			} else {
-				return false;
-			}
-		}
-
-		return true;
+	/**
+	 * Returns actual Cause from the given exception.
+	 * 
+	 * @param throwable
+	 * @return {@link Throwable}
+	 */
+	public static Throwable getRootCause(Throwable throwable) {
+		if (throwable.getCause() != null)
+			return getRootCause(throwable.getCause());
+		return throwable;
 	}
 }

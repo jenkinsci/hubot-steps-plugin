@@ -15,10 +15,14 @@
 	<description>Hubot Pipeline Steps</description>
 	<inceptionYear>2016</inceptionYear>
 	<properties>
-		<jackson2.version>2.4.0</jackson2.version>
+		<jackson2.version>2.6.0</jackson2.version>
 		<pipeline.version>2.4</pipeline.version>
 		<retrofit2.version>2.1.0</retrofit2.version>
 		<lombok.version>1.16.12</lombok.version>
+		<junit.version>4.11</junit.version>
+        <wiremock.version>2.3.1</wiremock.version>
+        <assertj-core.version>3.6.1</assertj-core.version>
+        <assertj-assertions-generator-maven-plugin.version>2.0.0</assertj-assertions-generator-maven-plugin.version>
 	</properties>
 	<organization>
 		<name>ThoughtsLive</name>
@@ -40,6 +44,13 @@
 			<organizationUrl>https://nrayapati.github.io/</organizationUrl>
 		</developer>
 	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/thoughtslive/${project.artifactId}.git</connection>
+		<developerConnection>scm:git:git@github.com:thoughtslive/${project.artifactId}.git</developerConnection>
+		<url>http://github.com/thoughtslive/${project.artifactId}</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<distributionManagement>
 		<repository>
@@ -99,6 +110,26 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-joda</artifactId>
 			<version>${jackson2.version}</version>
+		</dependency>
+		
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${wiremock.version}</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${assertj-core.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

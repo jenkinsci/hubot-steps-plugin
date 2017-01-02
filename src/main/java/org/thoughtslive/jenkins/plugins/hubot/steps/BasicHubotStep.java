@@ -10,14 +10,14 @@ import lombok.Getter;
 /**
  * Base class for all hubot steps
  */
-public abstract class BasicStep extends AbstractStepImpl implements Serializable {
+public abstract class BasicHubotStep extends AbstractStepImpl implements Serializable {
 
 	private static final long serialVersionUID = 7268920801605705697L;
 
 	@Getter
 	@DataBoundSetter
 	protected String room;
-	
+
 	@Getter
 	@DataBoundSetter
 	protected String message;
@@ -25,7 +25,7 @@ public abstract class BasicStep extends AbstractStepImpl implements Serializable
 	@Getter
 	@DataBoundSetter
 	private boolean failOnError = false;
-	
+
 	@Getter
 	@DataBoundSetter
 	private String url;
