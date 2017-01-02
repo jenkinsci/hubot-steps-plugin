@@ -17,16 +17,6 @@ import retrofit2.Response;
 public class Common {
 
 	/**
-	 * Empty check for string.
-	 * 
-	 * @param str
-	 * @return true if given string is null or empty.
-	 */
-	public static boolean empty(final String str) {
-		return str == null || str.trim().isEmpty();
-	}
-
-	/**
 	 * Attaches the "/" at end of given url.
 	 * 
 	 * @param url

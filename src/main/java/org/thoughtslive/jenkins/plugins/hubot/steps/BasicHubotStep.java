@@ -24,7 +24,7 @@ public abstract class BasicHubotStep extends AbstractStepImpl implements Seriali
 
 	@Getter
 	@DataBoundSetter
-	private boolean failOnError = false;
+	private boolean failOnError = true;
 
 	@Getter
 	@DataBoundSetter

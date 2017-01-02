@@ -45,7 +45,7 @@ public class ApproveStep extends BasicHubotStep {
 
 		@Override
 		public String getDisplayName() {
-			return "Hubot: Send Approval Message";
+			return "Hubot: Send approval message";
 		}
 	}
 

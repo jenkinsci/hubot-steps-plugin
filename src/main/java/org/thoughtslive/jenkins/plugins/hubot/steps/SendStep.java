@@ -41,7 +41,7 @@ public class SendStep extends BasicHubotStep {
 
 		@Override
 		public String getDisplayName() {
-			return "Hubot: Send a message";
+			return "Hubot: Send message";
 		}
 	}
 

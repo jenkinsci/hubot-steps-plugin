@@ -1,7 +1,6 @@
 package org.thoughtslive.jenkins.plugins.hubot.util;
 
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.buildErrorResponse;
-import static org.thoughtslive.jenkins.plugins.hubot.util.Common.empty;
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.log;
 
 import java.io.PrintStream;
@@ -43,13 +42,14 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T> extend
 		final String url = Util.fixEmpty(step.getUrl()) == null ? envVars.get("HUBOT_URL") : step.getUrl();
 		final String room = Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
 		final String message = step.getMessage();
-
-		boolean failOnError = false;
-		if (empty(envVars.get("HUBOT_FAIL_ON_ERROR"))) {
+		final String failOnErrorStr = Util.fixEmpty(envVars.get("HUBOT_FAIL_ON_ERROR"));
+		
+		if (failOnErrorStr == null) {
 			failOnError = step.isFailOnError();
 		} else {
-			failOnError = Boolean.getBoolean(envVars.get("HUBOT_FAIL_ON_ERROR"));
+			failOnError = Boolean.parseBoolean(failOnErrorStr);
 		}
+		
 		if (Util.fixEmpty(url) == null) {
 			errorMessage = "Hubot: HUBOT_URL is empty or null.";
 		}
@@ -63,11 +63,7 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T> extend
 		}
 
 		if (errorMessage != null) {
-			if (failOnError) {
-				throw new AbortException(errorMessage);
-			} else {
-				return buildErrorResponse(new RuntimeException(errorMessage));
-			}
+			return buildErrorResponse(new RuntimeException(errorMessage));
 		}
 
 		hubotService = new HubotService(url);
