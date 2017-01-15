@@ -6,6 +6,14 @@ Jenkins Pipeline Steps for integration with the https://hubot.github.com/[Hubot 
 '''
 toc::[]
 
+== Installation
+
+Run `mvn package` to build a deployable hpi bundle for Jenkins. Note this plugin **REQUIRES JDK 1.8** to build.
+
+Build the code and copy the target/hubot-steps.hpi plugin bundle to $JENKINS_HOME/plugins/ directory, and restart Jenkins. Check pom.xml file for more dependencies.
+
+This plugin is not yet hosted in the Jenkins Update Centre, so you cannot install or upgrade using the Jenkins UI.
+
 == Steps & Configuration
 
 The following Jenkins pipeline steps are available if you add this plugin to your Jenkins:
@@ -19,14 +27,14 @@ Allows sending of a message to the hubot chat bot
 hubotSend room: 'release', message: 'Releasing this project.', url: 'http://localhost:9999', failOnError: true
 ----
 
-* `url` is optional, if it is provided as global environment variable `HUBOT_URL` or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence. 
+* `url` is optional, if it is provided as global environment variable `HUBOT_URL` or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 
-* `room` is optional, if it is provided as global environment variable `HUBOT_DEFAULT_ROOM` or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence. 
+* `room` is optional, if it is provided as global environment variable `HUBOT_DEFAULT_ROOM` or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
 
 * `message` is required, actual message to be sent. Which is being prefixed with Job: #BUILD_URL string.
 
-* `failOnError` is optional and by default it is `true`, if any error it won't abort the job., it can also be provided as global environment variable `HUBOT_FAIL_ON_ERROR`, environment variable takes the higher precedence. 
- 
+* `failOnError` is optional and by default it is `true`, if any error it won't abort the job., it can also be provided as global environment variable `HUBOT_FAIL_ON_ERROR`, environment variable takes the higher precedence.
+
 === **hubotApprove**
 
 Sends a hubot message the project chat room for a project when the build is waiting for user input with the hubot commands to proceed or abort the build.
@@ -36,13 +44,13 @@ Sends a hubot message the project chat room for a project when the build is wait
 hubotApprove room: 'release', message: 'Proceed with building this Job?', url: 'http://localhost:9999/', failOnError: true
 ----
 
-* `url` is optional, if it is provided as global environment variable `HUBOT_URL` or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence. 
+* `url` is optional, if it is provided as global environment variable `HUBOT_URL` or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 
 * `message` is required, actual message to be sent. Which is being prefixed with Job: #BUILD_URL string.
 
-* `room` is optional, if it is provided as global environment variable `HUBOT_DEFAULT_ROOM` or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence. 
+* `room` is optional, if it is provided as global environment variable `HUBOT_DEFAULT_ROOM` or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
 
-* `failOnError` is optional and by default it is `true`, if any error it won't abort the job., it can also be provided as global variable `HUBOT_FAIL_ON_ERROR`, environment variable takes the higher precedence. 
+* `failOnError` is optional and by default it is `true`, if any error it won't abort the job., it can also be provided as global variable `HUBOT_FAIL_ON_ERROR`, environment variable takes the higher precedence.
 
 * Example
 +
@@ -68,13 +76,13 @@ image::images/abort.png[Slack Example,500]
 
 == Hubot Setup
 
-=== New to hubot? 
+=== New to hubot?
 
-Refer to https://github.com/ThoughtsLive/hubot-base[hubot-base] to setup a either docker container or to run it locally. 
+Refer to https://github.com/ThoughtsLive/hubot-base[hubot-base] to setup a either docker container or to run it locally.
 
 === Already running hubot.
 
-Then just copy over following scripts from https://github.com/ThoughtsLive/hubot-base[hubot-base] repo. 
+Then just copy over following scripts from https://github.com/ThoughtsLive/hubot-base[hubot-base] repo.
 
 * https://github.com/ThoughtsLive/hubot-base/blob/master/scripts/hubot.coffee[hubot]
 * https://github.com/ThoughtsLive/hubot-base/blob/master/scripts/jenkins.coffee[jenkins]
@@ -114,7 +122,5 @@ image::images/pipeline_syntax.png[Pipeline Syntax,900]
 image::images/blueocean.png[BlueOcean,900]
 
 == Disclaimer
-
-This plugin is currently under active development.
 
 Please don't hesitate to log an issue if you need any help or if you can be of help with this plugin :).
