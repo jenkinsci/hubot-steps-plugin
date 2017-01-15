@@ -12,7 +12,6 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 
 import java.io.PrintStream;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,12 +75,7 @@ public class SendStepTest {
 
 		// Execute and assert Test.
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.run(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.run(); })
 			.withMessage("Hubot: HUBOT_URL is empty or null.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();
@@ -94,12 +88,7 @@ public class SendStepTest {
 
 		// Execute and assert Test.
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.run(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.run(); })
 			.withMessage("Hubot: Room is empty or null.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();
@@ -112,12 +101,7 @@ public class SendStepTest {
 
 		// Execute and assert Test.
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.run(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.run(); })
 			.withMessage("Hubot: Message is empty or null.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();
@@ -133,12 +117,7 @@ public class SendStepTest {
 
 		// Assert Test
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.run(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.run(); })
 			.withMessage("Error while sending message to room.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();

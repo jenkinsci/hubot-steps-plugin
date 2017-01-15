@@ -12,8 +12,6 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 
 import java.io.PrintStream;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.assertj.core.api.ThrowableTypeAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,12 +75,7 @@ public class ApproveStepTest {
 
 		// Execute and assert Test.
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.start(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.start(); })
 			.withMessage("Hubot: HUBOT_URL is empty or null.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();
@@ -95,12 +88,7 @@ public class ApproveStepTest {
 
 		// Execute and assert Test.
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.start(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.start(); })
 			.withMessage("Hubot: Room is empty or null.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();
@@ -113,12 +101,7 @@ public class ApproveStepTest {
 
 		// Execute and assert Test.
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.start(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.start(); })
 			.withMessage("Hubot: Message is empty or null.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();
@@ -134,12 +117,7 @@ public class ApproveStepTest {
 
 		// Assert Test
 		assertThatExceptionOfType(AbortException.class)
-			.isThrownBy(new ThrowingCallable() {
-				@Override
-				public void call() throws Throwable {
-					stepExecution.start(); 
-				}
-			})
+			.isThrownBy(() -> { stepExecution.start(); })
 			.withMessage("fake error.")
 			.withStackTraceContaining("AbortException")
 			.withNoCause();
@@ -165,12 +143,7 @@ public class ApproveStepTest {
 
 		// Execute Test.  TODO Mock InputStep too.
 		assertThatExceptionOfType(AbortException.class)
-		.isThrownBy(new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				stepExecution.start(); 
-			}
-		})
+		.isThrownBy(() -> { stepExecution.start(); })
 		.withMessageStartingWith("Error while sending message:")
 		.withStackTraceContaining("AbortException")
 		.withNoCause();
