@@ -11,6 +11,8 @@ import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 import org.thoughtslive.jenkins.plugins.hubot.steps.BasicHubotStep;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Util;
@@ -57,20 +59,25 @@ public abstract class HubotStepExecution<T> extends AbstractStepExecutionImpl {
 		}
 
 		if (Util.fixEmpty(room) == null) {
-			errorMessage = "Hubot: Room - empty or null";
+			errorMessage = "Hubot: Room is empty or null.";
 		}
 
 		if (Util.fixEmpty(message) == null) {
-			errorMessage = "Hubot: Message - empty or null";
+			errorMessage = "Hubot: Message is empty or null.";
 		}
 
 		if (errorMessage != null) {
 			return buildErrorResponse(new RuntimeException(errorMessage));
 		}
 
-		hubotService = new HubotService(url);
+		hubotService = getHubotService(url);
 		return null;
 
+	}
+
+	@VisibleForTesting
+	public HubotService getHubotService(final String url) {
+		return new HubotService(url);
 	}
 
 	/**

@@ -26,7 +26,7 @@ public class ApproveStep extends BasicHubotStep {
 	private static final long serialVersionUID = 602836151349543369L;
 
 	@DataBoundConstructor
-	public ApproveStep(final String message, final String room) {
+	public ApproveStep(final String room, final String message) {
 		this.room = room;
 		this.message = message;
 	}
@@ -35,7 +35,7 @@ public class ApproveStep extends BasicHubotStep {
 	public static class DescriptorImpl extends AbstractStepDescriptorImpl {
 
 		public DescriptorImpl() {
-			super(HubotApproveStepExecution.class);
+			super(ApproveStepExecution.class);
 		}
 
 		@Override
@@ -49,29 +49,29 @@ public class ApproveStep extends BasicHubotStep {
 		}
 	}
 
-	public static class HubotApproveStepExecution extends HubotStepExecution<ResponseData<Void>> {
+	public static class ApproveStepExecution extends HubotStepExecution<ResponseData<Void>> {
 
 		private static final long serialVersionUID = 7827933215699460957L;
 
 		@Inject
-		private transient ApproveStep step;
+		transient ApproveStep step;
 		@StepContextParameter
-		private transient TaskListener listener;
+		transient TaskListener listener;
 		@StepContextParameter
-		private transient EnvVars envVars;
+		transient EnvVars envVars;
 
 		private InputStepExecution inputExecution = null;
 
 		@Override
 		public boolean start() throws Exception {
 
-			final String room = Util.fixEmpty(step.getRoom()) == null ? "#" + envVars.get("HUBOT_DEFAULT_ROOM") : "#" + step.getRoom();
+			final String room = Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
 			final URL buildUrl = new URL(envVars.get("BUILD_URL"));
 
 			ResponseData<Void> response = verifyCommon(step, listener, envVars);
 
-			final String message = "Job: " + buildUrl.toString() + "\n\n" + step.getMessage() + "\n" + "    to Proceed reply:  .j proceed " + buildUrl.getPath() + "\n"
-					+ "    to Abort reply  :  .j abort " + buildUrl.getPath() + "\n";
+			final String message = "Job: " + buildUrl.toString() + "\n\n" + step.getMessage() + "\n" + "\tto Proceed reply:  .j proceed " + buildUrl.getPath() + "\n"
+					+ "\tto Abort reply  :  .j abort " + buildUrl.getPath() + "\n";
 
 			if (response == null) {
 				logger.println("Hubot: ROOM - " + room + " - Approval Message - " + step.getMessage());

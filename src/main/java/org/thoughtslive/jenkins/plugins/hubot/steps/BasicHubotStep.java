@@ -6,6 +6,7 @@ import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.kohsuke.stapler.DataBoundSetter;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Base class for all hubot steps
@@ -24,6 +25,7 @@ public abstract class BasicHubotStep extends AbstractStepImpl implements Seriali
 
 	@Getter
 	@DataBoundSetter
+	@Setter
 	private boolean failOnError = true;
 
 	@Getter

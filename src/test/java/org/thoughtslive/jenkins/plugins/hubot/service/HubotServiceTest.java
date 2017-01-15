@@ -41,11 +41,11 @@ public class HubotServiceTest {
 		final String message = "testMessage";
 		final String mockedMessage = "{\"message\":\"" + message + "\"}";
 
-		wireMockRule.stubFor(post(urlEqualTo("/hubot/notify/" + room)).withRequestBody(equalTo(mockedMessage)).willReturn(aResponse().withStatus(200).withBody("{}")));
+		wireMockRule.stubFor(post(urlEqualTo("/hubot/notify/%23" + room)).withRequestBody(equalTo(mockedMessage)).willReturn(aResponse().withStatus(200).withBody("{}")));
 
 		final ResponseData<Void> response = hubotService.sendMessage(room, message);
 		assertThat(response.getCode()).isEqualTo(200);
-		wireMockRule.verify(postRequestedFor(urlEqualTo("/hubot/notify/" + room)).withRequestBody(equalTo(mockedMessage)));
+		wireMockRule.verify(postRequestedFor(urlEqualTo("/hubot/notify/%23" + room)).withRequestBody(equalTo(mockedMessage)));
 	}
 
 }

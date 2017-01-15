@@ -22,7 +22,7 @@ public class SendStep extends BasicHubotStep {
 	private static final long serialVersionUID = 2327375640378098562L;
 
 	@DataBoundConstructor
-	public SendStep(final String message, final String room) {
+	public SendStep(final String room, final String message) {
 		this.room = room;
 		this.message = message;
 	}
@@ -31,7 +31,7 @@ public class SendStep extends BasicHubotStep {
 	public static class DescriptorImpl extends AbstractStepDescriptorImpl {
 
 		public DescriptorImpl() {
-			super(Execution.class);
+			super(SendStepExecution.class);
 		}
 
 		@Override
@@ -45,30 +45,30 @@ public class SendStep extends BasicHubotStep {
 		}
 	}
 
-	public static class Execution extends HubotAbstractSynchronousNonBlockingStepExecution<Boolean> {
+	public static class SendStepExecution extends HubotAbstractSynchronousNonBlockingStepExecution<Boolean> {
 
 		private static final long serialVersionUID = -821037959812310749L;
 
 		@Inject
-		private transient SendStep step;
+		transient SendStep step;
 
 		@StepContextParameter
-		private transient TaskListener listener;
+		transient TaskListener listener;
 
 		@StepContextParameter
-		private transient EnvVars envVars;
+		transient EnvVars envVars;
 
 		@Override
 		protected Boolean run() throws Exception {
 
-			final String room = Util.fixEmpty(step.getRoom()) == null ? "#" + envVars.get("HUBOT_DEFAULT_ROOM") : "#" + step.getRoom();
-			final URL buildUrl = new URL(envVars.get("BUILD_URL"));
+			final String room = Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
+			final String buildUrl = envVars.get("BUILD_URL");
 
 			ResponseData<Void> response = verifyCommon(step, listener, envVars);
 
 			if (response == null) {
 				logger.println("Hubot: ROOM - " + room + " - Message - " + step.getMessage());
-				response = hubotService.sendMessage(room, "Job: " + buildUrl.toString() + "\n\n" + step.getMessage());
+				response = hubotService.sendMessage(room, "Job: " + buildUrl + "\n\n" + step.getMessage());
 			}
 
 			return logResponse(response).isSuccessful();

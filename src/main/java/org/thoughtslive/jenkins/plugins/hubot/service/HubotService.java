@@ -36,7 +36,7 @@ public class HubotService {
 	public ResponseData<Void> sendMessage(final String room, final String message) {
 		final Message jsonMessage = Message.builder().message(message).build();
 		try {
-			return parseResponse(hubotEndPoints.sendMessage(room, jsonMessage).execute());
+			return parseResponse(hubotEndPoints.sendMessage("#"+room, jsonMessage).execute());
 		} catch (Exception e) {
 			return buildErrorResponse(e);
 		}
