@@ -1,7 +1,10 @@
 = Hubot Pipeline Steps
 :toc: macro
 
-Jenkins Pipeline Steps for integration with the https://hubot.github.com/[Hubot Chat Bot] and human approval.
+
+image:images/JenkinsPlusHubot.png[Jenkins,300]
+
+Jenkins Pipeline Steps for integration with the https://hubot.github.com/[Hubot Chat Bot] and with human approval.
 
 '''
 toc::[]
@@ -126,4 +129,4 @@ image::images/blueocean.png[BlueOcean,900]
 
 Please don't hesitate to log a https://issues.jenkins-ci.org/secure/RapidBoard.jspa?rapidView=171&projectKey=JENKINS[JIRA] or github pull request if you need any help or if you can be of help with this plugin :).
 
-Developed by https://github.com/nrayapati[nrayapati], and was cloned from https://github.com/ThoughtsLive/hubot-steps[ThoughtsLive]
+Developed by https://github.com/nrayapati[nrayapati], and this repo was initially cloned from https://github.com/ThoughtsLive/hubot-steps[ThoughtsLive]
