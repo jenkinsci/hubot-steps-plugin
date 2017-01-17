@@ -12,7 +12,7 @@ Run `mvn package` to build a deployable hpi bundle for Jenkins. Note this plugin
 
 == Steps & Configuration
 
-The following Jenkins pipeline steps are available if you add this plugin to your Jenkins. 
+The following Jenkins pipeline steps are available if you add this plugin to your Jenkins.
 
 === **hubotSend**
 
@@ -76,12 +76,17 @@ image::images/abort.png[Slack Example,500]
 
 Refer to https://github.com/ThoughtsLive/hubot-base[hubot-base] to setup a either docker container or to run it locally.
 
+[Note]
+====
+Please replace scripts on hubot-base repo with the scripts under this hubot-steps repo and it is always a good idea to copy over the scripts from appropriate tag based on the version being installed on Jenkins.
+====
+
 === Already running hubot.
 
-Then just copy over following scripts from https://github.com/ThoughtsLive/hubot-base[hubot-base] repo.
+Then just copy over following scripts from `scripts` folder.
 
-* https://github.com/ThoughtsLive/hubot-base/blob/master/scripts/hubot.coffee[hubot]
-* https://github.com/ThoughtsLive/hubot-base/blob/master/scripts/jenkins.coffee[jenkins]
+* https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot.coffee[hubot]
+* https://github.com/jenkinsci/hubot-steps/blob/master/scripts/jenkins.coffee[jenkins]
 
 == Examples
 
