@@ -1,6 +1,7 @@
 = Hubot Pipeline Steps
 :toc: macro
-
+:note-caption: :information_source:
+:tip-caption: :bulb:
 
 image:images/JenkinsPlusHubot.png[Jenkins,300]
 
@@ -79,10 +80,7 @@ image::images/abort.png[Slack Example,500]
 
 Refer to https://github.com/ThoughtsLive/hubot-base[hubot-base] to setup a either docker container or to run it locally.
 
-[Note]
-====
-Please replace scripts on hubot-base repo with the scripts under this hubot-steps repo and it is always a good idea to copy over the scripts from appropriate tag based on the version being installed on Jenkins.
-====
+TIP: Please replace scripts on hubot-base repo with the scripts under this hubot-steps repo and it is always a good idea to copy over the scripts from appropriate tag based on the version being installed on Jenkins.
 
 === Already running hubot.
 
@@ -125,8 +123,12 @@ image::images/pipeline_syntax.png[Pipeline Syntax,900]
 
 image::images/blueocean.png[BlueOcean,900]
 
+== Maintainers
+
+* https://github.com/nrayapati[Naresh Rayapati]
+
 == Disclaimer
 
 Please don't hesitate to log a https://issues.jenkins-ci.org/secure/RapidBoard.jspa?rapidView=171&projectKey=JENKINS[JIRA] or github pull request if you need any help or if you can be of help with this plugin :).
 
-Developed by https://github.com/nrayapati[nrayapati], and this repo was initially cloned from https://github.com/ThoughtsLive/hubot-steps[ThoughtsLive]
+Developed by https://github.com/nrayapati[Naresh Rayapati], this repo was initially cloned from https://github.com/ThoughtsLive/hubot-steps[ThoughtsLive]
