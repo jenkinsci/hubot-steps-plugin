@@ -24,6 +24,7 @@ import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 
 import hudson.AbortException;
 import hudson.EnvVars;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 
 /**
@@ -39,6 +40,8 @@ public class ApproveStepTest {
 	@Mock
 	TaskListener taskListenerMock;
 	@Mock
+	Run runMock;
+	@Mock
 	EnvVars envVarsMock;
 	@Mock
 	PrintStream printStreamMock;
@@ -50,6 +53,7 @@ public class ApproveStepTest {
 	public void setup() {
 		stepExecution = spy(new ApproveStep.ApproveStepExecution());
 		
+		when(runMock.getCauses()).thenReturn(null);
 		when(taskListenerMock.getLogger()).thenReturn(printStreamMock);
 		doNothing().when(printStreamMock).println();
 		
@@ -61,6 +65,7 @@ public class ApproveStepTest {
 		
 		stepExecution.listener = taskListenerMock;
 		stepExecution.envVars = envVarsMock;
+		stepExecution.run = runMock;
 		
 		doReturn(hubotServiceMock).when(stepExecution).getHubotService(anyString());
 	}
@@ -149,9 +154,10 @@ public class ApproveStepTest {
 		.withNoCause();
 
 		// Assert Test
-		verify(hubotServiceMock, times(1)).sendMessage("room", "Job: http://localhost:9090/hubot-testing/job/01\n\n"
-				+ "message\n\tto Proceed reply:  .j proceed /hubot-testing/job/01"
-				+ "\n\tto Abort reply  :  .j abort /hubot-testing/job/01\n");
+		verify(hubotServiceMock, times(1)).sendMessage("room",	"message\n\tto Proceed reply:  .j proceed /hubot-testing/job/01"
+				+ "\n\tto Abort reply  :  .j abort /hubot-testing/job/01\n\n"
+				+ "Job: http://localhost:9090/hubot-testing/job/01\n"
+				+ "User: anonymous");
 		assertThat(stepExecution.step.isFailOnError()).isEqualTo(true);
 	}
 }

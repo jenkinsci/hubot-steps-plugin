@@ -16,6 +16,7 @@ import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Util;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 
 /**
@@ -55,8 +56,13 @@ public class ApproveStep extends BasicHubotStep {
 
 		@Inject
 		transient ApproveStep step;
+		
+		@StepContextParameter 
+		transient Run run;
+
 		@StepContextParameter
 		transient TaskListener listener;
+		
 		@StepContextParameter
 		transient EnvVars envVars;
 
@@ -67,11 +73,15 @@ public class ApproveStep extends BasicHubotStep {
 
 			final String room = Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
 			final URL buildUrl = new URL(envVars.get("BUILD_URL"));
+			final String buildUser = prepareBuildUser(run.getCauses());
 
 			ResponseData<Void> response = verifyCommon(step, listener, envVars);
 
-			final String message = "Job: " + buildUrl.toString() + "\n\n" + step.getMessage() + "\n" + "\tto Proceed reply:  .j proceed " + buildUrl.getPath() + "\n"
-					+ "\tto Abort reply  :  .j abort " + buildUrl.getPath() + "\n";
+			final String message = step.getMessage() + "\n" 
+					+ "\tto Proceed reply:  .j proceed " + buildUrl.getPath() + "\n"
+					+ "\tto Abort reply  :  .j abort " + buildUrl.getPath() + "\n\n"
+					+ "Job: " + buildUrl.toString() +"\n"
+					+ "User: "+ buildUser;
 
 			if (response == null) {
 				logger.println("Hubot: ROOM - " + room + " - Approval Message - " + step.getMessage());
