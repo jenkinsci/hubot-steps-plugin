@@ -4,6 +4,7 @@ import static org.thoughtslive.jenkins.plugins.hubot.util.Common.buildErrorRespo
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.log;
 
 import java.io.PrintStream;
+import java.util.List;
 
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
@@ -15,7 +16,10 @@ import com.google.common.annotations.VisibleForTesting;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Util;
+import hudson.model.Cause;
 import hudson.model.TaskListener;
+import hudson.model.Cause.UpstreamCause;
+import hudson.model.Cause.UserIdCause;
 
 /**
  * Common Execution for all Hubot steps.
@@ -102,4 +106,23 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T> extend
 
 		return response;
 	}
+	
+	/**
+	 * Return the current build user.
+	 * 
+	 * @param causes build causes.
+	 * @return user name.
+	 */
+	protected static String prepareBuildUser(List<Cause> causes) {
+		String buildUser = "anonymous";
+        if(causes != null && causes.size() > 0) {
+	        if(causes.get(0) instanceof UserIdCause){
+	        	buildUser =  ((UserIdCause)causes.get(0)).getUserName();
+	        } else if(causes.get(0) instanceof UpstreamCause) {
+	        	List<Cause> upstreamCauses = ((UpstreamCause)causes.get(0)).getUpstreamCauses();
+	        	prepareBuildUser(upstreamCauses);
+	        } 
+        }
+        return buildUser;
+	}	
 }

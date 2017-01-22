@@ -24,6 +24,7 @@ import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 
 import hudson.AbortException;
 import hudson.EnvVars;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 
 /**
@@ -39,6 +40,8 @@ public class SendStepTest {
 	@Mock
 	TaskListener taskListenerMock;
 	@Mock
+	Run runMock;
+	@Mock
 	EnvVars envVarsMock;
 	@Mock
 	PrintStream printStreamMock;
@@ -50,6 +53,7 @@ public class SendStepTest {
 	public void setup() {
 		stepExecution = spy(new SendStep.SendStepExecution());
 		
+		when(runMock.getCauses()).thenReturn(null);
 		when(taskListenerMock.getLogger()).thenReturn(printStreamMock);
 		doNothing().when(printStreamMock).println();
 		
@@ -61,6 +65,7 @@ public class SendStepTest {
 		
 		stepExecution.listener = taskListenerMock;
 		stepExecution.envVars = envVarsMock;
+		stepExecution.run = runMock;
 		
 		doReturn(hubotServiceMock).when(stepExecution).getHubotService(anyString());
 	}
@@ -145,7 +150,7 @@ public class SendStepTest {
 		stepExecution.run();
 
 		// Assert Test
-		verify(hubotServiceMock, times(1)).sendMessage("room", "Job: http://localhost:9090/hubot-testing/job/01\n\nmessage");
+		verify(hubotServiceMock, times(1)).sendMessage("room", "message\n\nJob: http://localhost:9090/hubot-testing/job/01\nUser: anonymous");
 		assertThat(stepExecution.step.isFailOnError()).isEqualTo(true);
 	}
 }
