@@ -8,7 +8,7 @@
   </parent>
   <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>hubot-steps</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.2-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>ThoughtsLive: Hubot Pipeline Steps</name>
   <description>Hubot Pipeline Steps</description>
