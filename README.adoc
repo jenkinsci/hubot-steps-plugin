@@ -58,12 +58,8 @@ hubotApprove room: 'release', message: 'Proceed with building this Job?', url: '
 +
 [source,groovy]
 ----
-node {
-    // Note: HUBOT_URL and HUBOT_DEFAULT_ROOM set as global environment variables.
-    stage('Build') {
-        hubotApprove message: 'Proceed with building this job?'
-    }
-}
+  // Note: HUBOT_URL and HUBOT_DEFAULT_ROOM set as global environment variables.
+  hubotApprove message: 'Proceed with building this job?'
 ----
 +
 image::images/slack.png[Slack Example,900]
@@ -132,5 +128,6 @@ image::images/blueocean.png[BlueOcean,900]
 == Disclaimer
 
 Please don't hesitate to log a https://issues.jenkins-ci.org/secure/RapidBoard.jspa?rapidView=171&projectKey=JENKINS[JIRA] or github pull request if you need any help or if you can be of help with this plugin :).
+Refer to the link:./CONTRIBUTION.adoc[contribution guide] for more inforamtion. 
 
 Developed by https://github.com/nrayapati[Naresh Rayapati], this repo was initially cloned from https://github.com/ThoughtsLive/hubot-steps[ThoughtsLive]

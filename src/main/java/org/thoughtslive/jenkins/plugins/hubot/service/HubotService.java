@@ -14,32 +14,32 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class HubotService {
 
-	private final HubotEndPoints hubotEndPoints;
+  private final HubotEndPoints hubotEndPoints;
 
-	public HubotService(final String baseUrl) {
+  public HubotService(final String baseUrl) {
 
-		final OkHttpClient httpClient = new OkHttpClient();
+    final OkHttpClient httpClient = new OkHttpClient();
 
-		this.hubotEndPoints = new Retrofit.Builder().baseUrl(sanitizeURL(baseUrl)).addConverterFactory(JacksonConverterFactory.create())
-				.addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(httpClient).build().create(HubotEndPoints.class);
-	}
+    this.hubotEndPoints = new Retrofit.Builder().baseUrl(sanitizeURL(baseUrl))
+        .addConverterFactory(JacksonConverterFactory.create())
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create()).client(httpClient).build()
+        .create(HubotEndPoints.class);
+  }
 
-	/**
-	 * Sends message to given room.
-	 * 
-	 * @param room
-	 *            chat room.
-	 * @param message
-	 *            actual message to be sent.
-	 * @return Nothing except the response with error code if any.
-	 */
-	public ResponseData<Void> sendMessage(final String room, final String message) {
-		final Message jsonMessage = Message.builder().message(message).build();
-		try {
-			return parseResponse(hubotEndPoints.sendMessage("#"+room, jsonMessage).execute());
-		} catch (Exception e) {
-			return buildErrorResponse(e);
-		}
+  /**
+   * Sends message to given room.
+   * 
+   * @param room chat room.
+   * @param message actual message to be sent.
+   * @return Nothing except the response with error code if any.
+   */
+  public ResponseData<Void> sendMessage(final String room, final String message) {
+    final Message jsonMessage = Message.builder().message(message).build();
+    try {
+      return parseResponse(hubotEndPoints.sendMessage("#" + room, jsonMessage).execute());
+    } catch (Exception e) {
+      return buildErrorResponse(e);
+    }
 
-	}
+  }
 }

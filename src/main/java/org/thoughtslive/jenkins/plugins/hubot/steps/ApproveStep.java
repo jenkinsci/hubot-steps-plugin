@@ -24,91 +24,90 @@ import hudson.model.TaskListener;
  */
 public class ApproveStep extends BasicHubotStep {
 
-	private static final long serialVersionUID = 602836151349543369L;
+  private static final long serialVersionUID = 602836151349543369L;
 
-	@DataBoundConstructor
-	public ApproveStep(final String room, final String message) {
-		this.room = room;
-		this.message = message;
-	}
+  @DataBoundConstructor
+  public ApproveStep(final String room, final String message) {
+    this.room = room;
+    this.message = message;
+  }
 
-	@Extension
-	public static class DescriptorImpl extends AbstractStepDescriptorImpl {
+  @Extension
+  public static class DescriptorImpl extends AbstractStepDescriptorImpl {
 
-		public DescriptorImpl() {
-			super(ApproveStepExecution.class);
-		}
+    public DescriptorImpl() {
+      super(ApproveStepExecution.class);
+    }
 
-		@Override
-		public String getFunctionName() {
-			return "hubotApprove";
-		}
+    @Override
+    public String getFunctionName() {
+      return "hubotApprove";
+    }
 
-		@Override
-		public String getDisplayName() {
-			return "Hubot: Send approval message";
-		}
-	}
+    @Override
+    public String getDisplayName() {
+      return "Hubot: Send approval message";
+    }
+  }
 
-	public static class ApproveStepExecution extends HubotStepExecution<ResponseData<Void>> {
+  public static class ApproveStepExecution extends HubotStepExecution<ResponseData<Void>> {
 
-		private static final long serialVersionUID = 7827933215699460957L;
+    private static final long serialVersionUID = 7827933215699460957L;
 
-		@Inject
-		transient ApproveStep step;
-		
-		@StepContextParameter 
-		transient Run run;
+    @Inject
+    transient ApproveStep step;
 
-		@StepContextParameter
-		transient TaskListener listener;
-		
-		@StepContextParameter
-		transient EnvVars envVars;
+    @StepContextParameter
+    transient Run run;
 
-		private InputStepExecution inputExecution = null;
+    @StepContextParameter
+    transient TaskListener listener;
 
-		@Override
-		public boolean start() throws Exception {
+    @StepContextParameter
+    transient EnvVars envVars;
 
-			final String room = Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
-			final URL buildUrl = new URL(envVars.get("BUILD_URL"));
-			final String buildUser = prepareBuildUser(run.getCauses());
+    private InputStepExecution inputExecution = null;
 
-			ResponseData<Void> response = verifyCommon(step, listener, envVars);
+    @Override
+    public boolean start() throws Exception {
 
-			final String message = step.getMessage() + "\n" 
-					+ "\tto Proceed reply:  .j proceed " + buildUrl.getPath() + "\n"
-					+ "\tto Abort reply  :  .j abort " + buildUrl.getPath() + "\n\n"
-					+ "Job: " + buildUrl.toString() +"\n"
-					+ "User: "+ buildUser;
+      final String room = Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM")
+          : step.getRoom();
+      final URL buildUrl = new URL(envVars.get("BUILD_URL"));
+      final String buildUser = prepareBuildUser(run.getCauses());
 
-			if (response == null) {
-				logger.println("Hubot: ROOM - " + room + " - Approval Message - " + step.getMessage());
-				response = hubotService.sendMessage(room, message);
-			}
+      ResponseData<Void> response = verifyCommon(step, listener, envVars);
 
-			logResponse(response);
+      final String message = step.getMessage() + "\n" + "\tto Proceed reply:  .j proceed "
+          + buildUrl.getPath() + "\n" + "\tto Abort reply  :  .j abort " + buildUrl.getPath()
+          + "\n\n" + "Job: " + buildUrl.toString() + "\n" + "User: " + buildUser;
 
-			try {
-				final InputStep input = new InputStep(step.getMessage());
-				input.setId("Proceed");
-				final InputStepExecution inputExecution = (InputStepExecution) input.start(getContext());
-				return inputExecution.start();
-			} catch (final Exception e) {
-				if (failOnError) {
-					throw new AbortException("Error while sending message: " + e.getMessage());
-				} else {
-					return false;
-				}
-			}
-		}
+      if (response == null) {
+        logger.println("Hubot: ROOM - " + room + " - Approval Message - " + step.getMessage());
+        response = hubotService.sendMessage(room, message);
+      }
 
-		@Override
-		public void stop(Throwable cause) throws Exception {
-			if (inputExecution != null) {
-				inputExecution.stop(cause);
-			}
-		}
-	}
+      logResponse(response);
+
+      try {
+        final InputStep input = new InputStep(step.getMessage());
+        input.setId("Proceed");
+        final InputStepExecution inputExecution = (InputStepExecution) input.start(getContext());
+        return inputExecution.start();
+      } catch (final Exception e) {
+        if (failOnError) {
+          throw new AbortException("Error while sending message: " + e.getMessage());
+        } else {
+          return false;
+        }
+      }
+    }
+
+    @Override
+    public void stop(Throwable cause) throws Exception {
+      if (inputExecution != null) {
+        inputExecution.stop(cause);
+      }
+    }
+  }
 }

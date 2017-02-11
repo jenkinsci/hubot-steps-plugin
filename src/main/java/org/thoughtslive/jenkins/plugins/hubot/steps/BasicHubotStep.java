@@ -13,23 +13,23 @@ import lombok.Setter;
  */
 public abstract class BasicHubotStep extends AbstractStepImpl implements Serializable {
 
-	private static final long serialVersionUID = 7268920801605705697L;
+  private static final long serialVersionUID = 7268920801605705697L;
 
-	@Getter
-	@DataBoundSetter
-	protected String room;
+  @Getter
+  @DataBoundSetter
+  protected String room;
 
-	@Getter
-	@DataBoundSetter
-	protected String message;
+  @Getter
+  @DataBoundSetter
+  protected String message;
 
-	@Getter
-	@DataBoundSetter
-	@Setter
-	private boolean failOnError = true;
+  @Getter
+  @DataBoundSetter
+  @Setter
+  private boolean failOnError = true;
 
-	@Getter
-	@DataBoundSetter
-	private String url;
+  @Getter
+  @DataBoundSetter
+  private String url;
 
 }

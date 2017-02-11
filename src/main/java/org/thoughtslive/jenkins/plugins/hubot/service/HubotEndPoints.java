@@ -9,7 +9,7 @@ import retrofit2.http.Path;
 
 public interface HubotEndPoints {
 
-	@POST("hubot/notify/{room}")
-	Call<Void> sendMessage(@Path("room") String room, @Body Message message);
+  @POST("hubot/notify/{room}")
+  Call<Void> sendMessage(@Path("room") String room, @Body Message message);
 
 }

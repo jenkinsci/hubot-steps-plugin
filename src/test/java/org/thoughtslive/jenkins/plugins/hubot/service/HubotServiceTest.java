@@ -22,30 +22,33 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
  */
 public class HubotServiceTest {
 
-	// TODO Need to be dynamic and retry if that port not available. 
-	final static int PORT = 1052;
-	final static String hubotUrl = String.format("http://localhost:%d", PORT);
+  // TODO Need to be dynamic and retry if that port not available.
+  final static int PORT = 1052;
+  final static String hubotUrl = String.format("http://localhost:%d", PORT);
 
-	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(PORT);
-	public HubotService hubotService;
+  @Rule
+  public WireMockRule wireMockRule = new WireMockRule(PORT);
+  public HubotService hubotService;
 
-	@Before
-	public void setUp() throws Exception {
-		hubotService = new HubotService(hubotUrl);
-	}
+  @Before
+  public void setUp() throws Exception {
+    hubotService = new HubotService(hubotUrl);
+  }
 
-	@Test
-	public void testSendMessage() throws Exception {
-		final String room = "botlab";
-		final String message = "testMessage";
-		final String mockedMessage = "{\"message\":\"" + message + "\"}";
+  @Test
+  public void testSendMessage() throws Exception {
+    final String room = "botlab";
+    final String message = "testMessage";
+    final String mockedMessage = "{\"message\":\"" + message + "\"}";
 
-		wireMockRule.stubFor(post(urlEqualTo("/hubot/notify/%23" + room)).withRequestBody(equalTo(mockedMessage)).willReturn(aResponse().withStatus(200).withBody("{}")));
+    wireMockRule.stubFor(
+        post(urlEqualTo("/hubot/notify/%23" + room)).withRequestBody(equalTo(mockedMessage))
+            .willReturn(aResponse().withStatus(200).withBody("{}")));
 
-		final ResponseData<Void> response = hubotService.sendMessage(room, message);
-		assertThat(response.getCode()).isEqualTo(200);
-		wireMockRule.verify(postRequestedFor(urlEqualTo("/hubot/notify/%23" + room)).withRequestBody(equalTo(mockedMessage)));
-	}
+    final ResponseData<Void> response = hubotService.sendMessage(room, message);
+    assertThat(response.getCode()).isEqualTo(200);
+    wireMockRule.verify(postRequestedFor(urlEqualTo("/hubot/notify/%23" + room))
+        .withRequestBody(equalTo(mockedMessage)));
+  }
 
 }
