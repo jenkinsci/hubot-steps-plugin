@@ -4,9 +4,8 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>2.19</version>
+    <version>2.21</version>
   </parent>
-  <groupId>org.jenkins-ci.plugins</groupId>
   <artifactId>hubot-steps</artifactId>
   <version>1.0.2-SNAPSHOT</version>
   <packaging>hpi</packaging>
@@ -18,9 +17,7 @@
     <java.level>8</java.level>
     <jenkins.version>1.642.3</jenkins.version>
     <jenkins-test-harness.version>2.15</jenkins-test-harness.version>
-    <hpi-plugin.version>1.95</hpi-plugin.version>
     <pipeline.version>2.4</pipeline.version>
-    <workflow.step.api.version>2.3</workflow.step.api.version>
     <jackson2.version>2.6.0</jackson2.version>
     <retrofit2.version>2.1.0</retrofit2.version>
     <lombok.version>1.16.12</lombok.version>
@@ -165,25 +162,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.jenkins-ci.tools</groupId>
-        <artifactId>maven-hpi-plugin</artifactId>
-        <version>${hpi-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <testSource>1.8</testSource>
-          <testTarget>1.8</testTarget>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
   <profiles>
     <profile>
       <id>doclint-java8-disable</id>
