@@ -1,8 +1,18 @@
 = Release Notes.
 
+== 1.1.0
+
+* Upgrade pipeline plugin version to 2.5.
+* Minimum *Jenkins* requirement - *2.7.3*.
+* Remove ThoughtsLive: from plugin name.
+* Upgrade parent to latest (2.23).
+
 == 1.0.1
 
 * https://github.com/jenkinsci/hubot-steps-plugin/issues/1[ISSUE-1] Append build user to message.
 
 == 1.0.0
 * Initial release.
+* Supported Steps.
+** hubotSend
+** hubotApprove

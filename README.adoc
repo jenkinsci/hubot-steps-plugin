@@ -121,6 +121,10 @@ image::images/pipeline_syntax.png[Pipeline Syntax,900]
 
 image::images/blueocean.png[BlueOcean,900]
 
+== Known Issues
+
+* https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot.coffee[hubot] script doesn't work when *Prevent Cross Site Request Forgery exploits* enabled in Configure Global Security.
+
 == Maintainers
 
 * https://github.com/nrayapati[Naresh Rayapati]
@@ -128,6 +132,6 @@ image::images/blueocean.png[BlueOcean,900]
 == Disclaimer
 
 Please don't hesitate to log a https://issues.jenkins-ci.org/secure/RapidBoard.jspa?rapidView=171&projectKey=JENKINS[JIRA] or github pull request if you need any help or if you can be of help with this plugin :).
-Refer to the link:./CONTRIBUTION.adoc[contribution guide] for more inforamtion. 
+Refer to the link:./CONTRIBUTION.adoc[contribution guide] for more inforamtion.
 
 Developed by https://github.com/nrayapati[Naresh Rayapati], this repo was initially cloned from https://github.com/ThoughtsLive/hubot-steps[ThoughtsLive]
