@@ -3,11 +3,12 @@ package org.thoughtslive.jenkins.plugins.hubot.util;
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.buildErrorResponse;
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.log;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 
-import org.jenkinsci.plugins.workflow.steps.AbstractStepExecutionImpl;
-import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
+import org.jenkinsci.plugins.workflow.steps.StepContext;
+import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 import org.thoughtslive.jenkins.plugins.hubot.steps.BasicHubotStep;
@@ -18,6 +19,7 @@ import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Util;
 import hudson.model.Cause;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.model.Cause.UpstreamCause;
 import hudson.model.Cause.UserIdCause;
@@ -25,32 +27,46 @@ import hudson.model.Cause.UserIdCause;
 /**
  * Common Execution for all Hubot steps.
  * 
- * @see AbstractSynchronousNonBlockingStepExecution
+ * @see StepExecution
  * @author Naresh Rayapati
  *
  * @param <T> the type of the return value (may be {@link Void})
  */
-public abstract class HubotStepExecution<T> extends AbstractStepExecutionImpl {
+public abstract class HubotStepExecution<T> extends StepExecution {
 
   private static final long serialVersionUID = -8253380624161445367L;
+
+  private transient Run<?, ?> run;
+  private transient TaskListener listener;
+  private transient EnvVars envVars;
 
   protected transient PrintStream logger = null;
   protected transient String siteName = null;
   protected transient HubotService hubotService = null;
   protected transient boolean failOnError = false;
 
+  protected transient String room = null;
+  protected transient String buildUser = null;
+  protected transient String buildUrl = null;
+
+  protected HubotStepExecution(StepContext context) throws IOException, InterruptedException {
+    super(context);
+    run = context.get(Run.class);
+    listener = context.get(TaskListener.class);
+    envVars = context.get(EnvVars.class);
+  }
+
   // TODO: Duplicate logic between other step execution need to find out a way how we can have a
   // same super class.
   @SuppressWarnings("hiding")
-  protected <T> ResponseData<T> verifyCommon(final BasicHubotStep step, final TaskListener listener,
-      final EnvVars envVars) throws AbortException {
+  protected <T> ResponseData<T> verifyCommon(final BasicHubotStep step) throws AbortException {
 
     logger = listener.getLogger();
     String errorMessage = null;
 
     final String url =
         Util.fixEmpty(step.getUrl()) == null ? envVars.get("HUBOT_URL") : step.getUrl();
-    final String room =
+    room =
         Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
     final String message = step.getMessage();
     final String failOnErrorStr = Util.fixEmpty(envVars.get("HUBOT_FAIL_ON_ERROR"));
@@ -77,14 +93,24 @@ public abstract class HubotStepExecution<T> extends AbstractStepExecutionImpl {
       return buildErrorResponse(new RuntimeException(errorMessage));
     }
 
-    hubotService = getHubotService(url);
+    setHubotService(url);
+
+    buildUser = prepareBuildUser(run.getCauses());
+    buildUrl = envVars.get("BUILD_URL");
+
     return null;
 
   }
 
   @VisibleForTesting
-  public HubotService getHubotService(final String url) {
-    return new HubotService(url);
+  public void setHubotService(final HubotService service) {
+    this.hubotService = service;
+  }
+
+  private void setHubotService(final String url) {
+    if (this.hubotService == null) {
+      this.hubotService = new HubotService(url);
+    }
   }
 
   /**

@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.spy;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
+import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,18 +40,20 @@ public class SendStepTest {
   @Mock
   TaskListener taskListenerMock;
   @Mock
-  Run runMock;
+  Run<?, ?> runMock;
   @Mock
   EnvVars envVarsMock;
   @Mock
   PrintStream printStreamMock;
   @Mock
   HubotService hubotServiceMock;
+  @Mock
+  StepContext contextMock;
+
   SendStep.SendStepExecution stepExecution;
 
   @Before
-  public void setup() {
-    stepExecution = spy(new SendStep.SendStepExecution());
+  public void setup() throws IOException, InterruptedException {
 
     when(runMock.getCauses()).thenReturn(null);
     when(taskListenerMock.getLogger()).thenReturn(printStreamMock);
@@ -64,17 +66,16 @@ public class SendStepTest {
     when(envVarsMock.get("HUBOT_URL")).thenReturn("http://localhost:9090/");
     when(envVarsMock.get("BUILD_URL")).thenReturn("http://localhost:9090/hubot-testing/job/01");
 
-    stepExecution.listener = taskListenerMock;
-    stepExecution.envVars = envVarsMock;
-    stepExecution.run = runMock;
-
-    doReturn(hubotServiceMock).when(stepExecution).getHubotService(anyString());
+    when(contextMock.get(Run.class)).thenReturn(runMock);
+    when(contextMock.get(TaskListener.class)).thenReturn(taskListenerMock);
+    when(contextMock.get(EnvVars.class)).thenReturn(envVarsMock);
   }
 
   @Test
   public void testWithEmptyHubotURLThrowsAbortException() throws Exception {
-    final SendStep hubotSendStep = new SendStep("room", "message");
-    stepExecution.step = hubotSendStep;
+    final SendStep step = new SendStep("room", "message");
+    stepExecution = new SendStep.SendStepExecution(step, contextMock);
+    stepExecution.setHubotService(hubotServiceMock);
 
     // Prepare Test.
     when(envVarsMock.get("HUBOT_URL")).thenReturn("");
@@ -88,8 +89,9 @@ public class SendStepTest {
 
   @Test
   public void testWithEmptyRoomThrowsAbortException() throws Exception {
-    final SendStep hubotSendStep = new SendStep("", "message");
-    stepExecution.step = hubotSendStep;
+    final SendStep step = new SendStep("", "message");
+    stepExecution = new SendStep.SendStepExecution(step, contextMock);
+    stepExecution.setHubotService(hubotServiceMock);
 
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
@@ -100,8 +102,9 @@ public class SendStepTest {
 
   @Test
   public void testWithEmptyMessageThrowsAbortException() throws Exception {
-    final SendStep hubotSendStep = new SendStep("room", "");
-    stepExecution.step = hubotSendStep;
+    final SendStep step = new SendStep("room", "");
+    stepExecution = new SendStep.SendStepExecution(step, contextMock);
+    stepExecution.setHubotService(hubotServiceMock);
 
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
@@ -112,8 +115,9 @@ public class SendStepTest {
 
   @Test
   public void testErrorMessageSend() throws Exception {
-    final SendStep hubotSendStep = new SendStep("room", "message");
-    stepExecution.step = hubotSendStep;
+    final SendStep step = new SendStep("room", "message");
+    stepExecution = new SendStep.SendStepExecution(step, contextMock);
+    stepExecution.setHubotService(hubotServiceMock);
 
     final ResponseDataBuilder<Void> builder = ResponseData.builder();
     when(hubotServiceMock.sendMessage(anyString(), anyString())).thenReturn(
@@ -128,9 +132,10 @@ public class SendStepTest {
 
   @Test
   public void testFailOnErrorFalseDoesNotThrowsAbortException() throws Exception {
-    final SendStep hubotSendStep = new SendStep("", "");
-    hubotSendStep.setFailOnError(false);
-    stepExecution.step = hubotSendStep;
+    final SendStep step = new SendStep("", "");
+    step.setFailOnError(false);
+    stepExecution = new SendStep.SendStepExecution(step, contextMock);
+    stepExecution.setHubotService(hubotServiceMock);
 
     // Prepare Test.
     when(envVarsMock.get("HUBOT_URL")).thenReturn("");
@@ -141,8 +146,9 @@ public class SendStepTest {
 
   @Test
   public void testSuccessfulMessageSend() throws Exception {
-    final SendStep hubotSendStep = new SendStep("room", "message");
-    stepExecution.step = hubotSendStep;
+    final SendStep step = new SendStep("room", "message");
+    stepExecution = new SendStep.SendStepExecution(step, contextMock);
+    stepExecution.setHubotService(hubotServiceMock);
 
     // Execute Test.
     stepExecution.run();
@@ -150,6 +156,6 @@ public class SendStepTest {
     // Assert Test
     verify(hubotServiceMock, times(1)).sendMessage("room",
         "message\n\nJob: http://localhost:9090/hubot-testing/job/01\nUser: anonymous");
-    assertThat(stepExecution.step.isFailOnError()).isEqualTo(true);
+    assertThat(step.isFailOnError()).isEqualTo(true);
   }
 }
