@@ -1,9 +1,13 @@
 package org.thoughtslive.jenkins.plugins.hubot.steps;
 
+import com.google.common.collect.ImmutableSet;
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.Extension;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Set;
-
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -11,19 +15,15 @@ import org.jenkinsci.plugins.workflow.steps.StepExecution;
 import org.jenkinsci.plugins.workflow.support.steps.input.InputStep;
 import org.jenkinsci.plugins.workflow.support.steps.input.InputStepExecution;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.thoughtslive.jenkins.plugins.hubot.api.Message;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
+import org.thoughtslive.jenkins.plugins.hubot.util.Common.STEP;
 import org.thoughtslive.jenkins.plugins.hubot.util.HubotStepExecution;
-
-import com.google.common.collect.ImmutableSet;
-
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.Extension;
-import hudson.model.Run;
-import hudson.model.TaskListener;
 
 /**
  * Sends an approval message to Hubot.
+ *
+ * @author Naresh Rayapati.
  */
 public class ApproveStep extends BasicHubotStep {
 
@@ -33,6 +33,11 @@ public class ApproveStep extends BasicHubotStep {
   public ApproveStep(final String room, final String message) {
     this.room = room;
     this.message = message;
+  }
+
+  @Override
+  public StepExecution start(StepContext context) throws Exception {
+    return new ApproveStepExecution(this, context);
   }
 
   @Extension
@@ -75,14 +80,13 @@ public class ApproveStep extends BasicHubotStep {
 
       if (response == null) {
 
-        final URL url = new URL(buildUrl);
-
-        final String message = step.getMessage() + "\n" + "\tto Proceed reply:  .j proceed "
-            + url.getPath() + "\n" + "\tto Abort reply  :  .j abort " + url.getPath() + "\n\n"
-            + "Job: " + buildUrl.toString() + "\n" + "User: " + buildUser;
-
         logger.println("Hubot: ROOM - " + room + " - Approval Message - " + step.getMessage());
-        response = hubotService.sendMessage(room, message);
+        final Message message = Message.builder().message(step.getMessage()).userName(buildUserName)
+            .userId(buildUserId).status(step.getStatus()).extraData(step.getExtraData())
+            .envVars(envVars).stepName(STEP.APPROVE.name()).ts(System.currentTimeMillis() / 1000)
+            .build();
+        response = hubotService.sendMessage(message);
+
       }
 
       logResponse(response);
@@ -109,10 +113,5 @@ public class ApproveStep extends BasicHubotStep {
         inputExecution.stop(cause);
       }
     }
-  }
-
-  @Override
-  public StepExecution start(StepContext context) throws Exception {
-    return new ApproveStepExecution(this, context);
   }
 }

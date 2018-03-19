@@ -2,15 +2,18 @@ package org.thoughtslive.jenkins.plugins.hubot.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import java.io.IOException;
 import java.io.PrintStream;
-
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,20 +21,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.thoughtslive.jenkins.plugins.hubot.api.Message;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData.ResponseDataBuilder;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.model.Run;
-import hudson.model.TaskListener;
-
 /**
  * Unit test cases for SendStep class.
- * 
- * @author Naresh Rayapati
  *
+ * @author Naresh Rayapati
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ApproveStepTest.class})
@@ -59,7 +57,7 @@ public class ApproveStepTest {
     doNothing().when(printStreamMock).println();
 
     final ResponseDataBuilder<Void> builder = ResponseData.builder();
-    when(hubotServiceMock.sendMessage(anyString(), anyString()))
+    when(hubotServiceMock.sendMessage(any()))
         .thenReturn(builder.successful(true).code(200).message("Success").build());
 
     when(envVarsMock.get("HUBOT_URL")).thenReturn("http://localhost:9090/");
@@ -120,7 +118,7 @@ public class ApproveStepTest {
     stepExecution.setHubotService(hubotServiceMock);
 
     final ResponseDataBuilder<Void> builder = ResponseData.builder();
-    when(hubotServiceMock.sendMessage(anyString(), anyString()))
+    when(hubotServiceMock.sendMessage(any()))
         .thenReturn(builder.successful(false).code(400).error("fake error.").build());
 
     // Assert Test
@@ -156,10 +154,9 @@ public class ApproveStepTest {
         .withStackTraceContaining("AbortException").withNoCause();
 
     // Assert Test
-    verify(hubotServiceMock, times(1)).sendMessage("room",
-        "message\n\tto Proceed reply:  .j proceed /hubot-testing/job/01"
-            + "\n\tto Abort reply  :  .j abort /hubot-testing/job/01\n\n"
-            + "Job: http://localhost:9090/hubot-testing/job/01\n" + "User: anonymous");
+    verify(hubotServiceMock, times(1)).sendMessage(
+        Message.builder().message("message").userName("anonymous").stepName("Approve")
+            .envVars(envVarsMock).build());
     assertThat(step.isFailOnError()).isEqualTo(true);
   }
 }

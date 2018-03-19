@@ -10,7 +10,7 @@
   <f:entry field="url" title="URL">
     <f:textbox/>
   </f:entry>
-  <f:entry field="failOnError">
-  	<f:checkbox title="Fail On Error" default="true"/>
+  <f:entry title="Fail On Error" field="failOnError">
+    <f:checkbox default="true"/>
   </f:entry>
 </j:jelly>

@@ -1,32 +1,39 @@
 package org.thoughtslive.jenkins.plugins.hubot.steps;
 
-import java.io.IOException;
-import java.util.Set;
-
-import org.jenkinsci.plugins.workflow.steps.StepContext;
-import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
-import org.jenkinsci.plugins.workflow.steps.StepExecution;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
-import org.thoughtslive.jenkins.plugins.hubot.util.HubotAbstractSynchronousNonBlockingStepExecution;
-
 import com.google.common.collect.ImmutableSet;
-
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.model.Run;
 import hudson.model.TaskListener;
+import java.io.IOException;
+import java.util.Set;
+import org.jenkinsci.plugins.workflow.steps.StepContext;
+import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
+import org.jenkinsci.plugins.workflow.steps.StepExecution;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.thoughtslive.jenkins.plugins.hubot.api.Message;
+import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
+import org.thoughtslive.jenkins.plugins.hubot.util.Common.STEP;
+import org.thoughtslive.jenkins.plugins.hubot.util.HubotAbstractSynchronousNonBlockingStepExecution;
 
 /**
  * Sends a message to hubot
+ *
+ * @author Naresh Rayapati.
  */
 public class SendStep extends BasicHubotStep {
+
   private static final long serialVersionUID = 2327375640378098562L;
 
   @DataBoundConstructor
   public SendStep(final String room, final String message) {
     this.room = room;
     this.message = message;
+  }
+
+  @Override
+  public StepExecution start(StepContext context) throws Exception {
+    return new SendStepExecution(this, context);
   }
 
   @Extension
@@ -68,16 +75,15 @@ public class SendStep extends BasicHubotStep {
 
       if (response == null) {
         logger.println("Hubot: ROOM - " + room + " - Message - " + step.getMessage());
-        response = hubotService.sendMessage(room, step.getMessage() + "\n\n" + "Job: "
-            + buildUrl.toString() + "\n" + "User: " + buildUser);
+        final Message message = Message.builder().message(step.getMessage()).userName(buildUserName)
+            .userId(buildUserId).envVars(envVars).status(step.getStatus())
+            .extraData(step.getExtraData()).stepName(STEP.SEND.name())
+            .ts(System.currentTimeMillis() / 1000)
+            .build();
+        response = hubotService.sendMessage(message);
       }
 
       return logResponse(response).isSuccessful();
     }
-  }
-
-  @Override
-  public StepExecution start(StepContext context) throws Exception {
-    return new SendStepExecution(this, context);
   }
 }

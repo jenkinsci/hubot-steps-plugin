@@ -1,24 +1,26 @@
 package org.thoughtslive.jenkins.plugins.hubot.util;
 
+import hudson.EnvVars;
+import hudson.Util;
+import hudson.model.Cause;
+import hudson.model.Cause.UpstreamCause;
+import hudson.model.Cause.UserIdCause;
 import java.io.IOException;
 import java.io.PrintStream;
-
+import java.util.List;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
-
-import hudson.EnvVars;
 import retrofit2.Response;
 
 /**
  * Common utility functions.
- * 
- * @author Naresh Rayapati
  *
+ * @author Naresh Rayapati
  */
 public class Common {
 
   /**
    * Attaches the "/" at end of given url.
-   * 
+   *
    * @param url url as a string.
    * @return url which ends with "/"
    */
@@ -31,7 +33,7 @@ public class Common {
 
   /**
    * Write a message to the given print stream.
-   * 
+   *
    * @param logger {@link PrintStream}
    * @param message to log.
    */
@@ -47,7 +49,7 @@ public class Common {
 
   /**
    * Returns build number from the given Environemnt Vars.
-   * 
+   *
    * @param logger {@link PrintStream}
    * @param envVars {@link EnvVars}
    * @return build number of current job.
@@ -63,10 +65,9 @@ public class Common {
 
   /**
    * Converts Retrofit's {@link Response} to {@link ResponseData}
-   * 
+   *
    * @param response instance of {@link Response}
    * @return an instance of {@link ResponseData}
-   * @throws IOException
    */
   public static <T> ResponseData<T> parseResponse(final Response<T> response) throws IOException {
     final ResponseData<T> resData = new ResponseData<T>();
@@ -84,7 +85,7 @@ public class Common {
 
   /**
    * Builds error response from the given exception.
-   * 
+   *
    * @param e instance of {@link Exception}
    * @return an instance of {@link ResponseData}
    */
@@ -100,13 +101,68 @@ public class Common {
 
   /**
    * Returns actual Cause from the given exception.
-   * 
-   * @param throwable
+   *
    * @return {@link Throwable}
    */
   public static Throwable getRootCause(Throwable throwable) {
-    if (throwable.getCause() != null)
+    if (throwable.getCause() != null) {
       return getRootCause(throwable.getCause());
+    }
     return throwable;
+  }
+
+  /**
+   * Return the current build user.
+   *
+   * @param causes build causes.
+   * @param envVars environment variables.
+   * @return user name.
+   */
+  public static String prepareBuildUserName(List<Cause> causes, EnvVars envVars) {
+    String buildUser = "anonymous";
+
+    // For multi branch jobs, while PR building.
+    if (Util.fixEmpty(envVars.get("CHANGE_AUTHOR")) != null) {
+      return envVars.get("CHANGE_AUTHOR");
+    }
+
+    if (causes != null && causes.size() > 0) {
+      if (causes.get(0) instanceof UserIdCause) {
+        buildUser = ((UserIdCause) causes.get(0)).getUserName();
+      } else if (causes.get(0) instanceof UpstreamCause) {
+        List<Cause> upstreamCauses = ((UpstreamCause) causes.get(0)).getUpstreamCauses();
+        buildUser = prepareBuildUserName(upstreamCauses, envVars);
+      }
+    }
+    return buildUser;
+  }
+
+  /**
+   * Return the current build user Id.
+   *
+   * @param causes build causes.
+   * @param envVars environment variables.
+   * @return user name.
+   */
+  public static String prepareBuildUserId(List<Cause> causes, EnvVars envVars) {
+    String buildUserId = null;
+
+    if (causes != null && causes.size() > 0) {
+      if (causes.get(0) instanceof UserIdCause) {
+        buildUserId = ((UserIdCause) causes.get(0)).getUserId();
+      } else if (causes.get(0) instanceof UpstreamCause) {
+        List<Cause> upstreamCauses = ((UpstreamCause) causes.get(0)).getUpstreamCauses();
+        buildUserId = prepareBuildUserId(upstreamCauses, envVars);
+      }
+    }
+    return buildUserId;
+  }
+
+  public enum STEP {
+    SEND, APPROVE, BUILD, TEST
+  }
+
+  public enum STATUS {
+    INFO, SUCCESS, WARN, ERROR
   }
 }
