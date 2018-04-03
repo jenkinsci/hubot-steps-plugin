@@ -19,11 +19,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.thoughtslive.jenkins.plugins.hubot.api.Message;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData.ResponseDataBuilder;
+import org.thoughtslive.jenkins.plugins.hubot.config.HubotSite;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 
 /**
@@ -66,7 +67,6 @@ public class ApproveStepTest {
     when(contextMock.get(Run.class)).thenReturn(runMock);
     when(contextMock.get(TaskListener.class)).thenReturn(taskListenerMock);
     when(contextMock.get(EnvVars.class)).thenReturn(envVarsMock);
-
   }
 
   @Test
@@ -81,20 +81,21 @@ public class ApproveStepTest {
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.start();
-    }).withMessage("Hubot: HUBOT_URL is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_URL or step parameter equivalent is empty or null.").withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
   @Test
   public void testWithEmptyRoomThrowsAbortException() throws Exception {
     final ApproveStep step = new ApproveStep("", "message");
+    step.setUrl("http://localhost:9090/");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.start();
-    }).withMessage("Hubot: Room is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.").withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
@@ -130,7 +131,7 @@ public class ApproveStepTest {
   @Test
   public void testFailOnErrorFalseDoesNotThrowsAbortException() throws Exception {
     final ApproveStep step = new ApproveStep("", "");
-    step.setFailOnError(false);
+    step.setFailOnError("false");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -154,9 +155,7 @@ public class ApproveStepTest {
         .withStackTraceContaining("AbortException").withNoCause();
 
     // Assert Test
-    verify(hubotServiceMock, times(1)).sendMessage(
-        Message.builder().message("message").userName("anonymous").stepName("Approve")
-            .envVars(envVarsMock).build());
-    assertThat(step.isFailOnError()).isEqualTo(true);
+    verify(hubotServiceMock, times(1)).sendMessage(any());
+    assertThat(step.getFailOnError()).isEqualTo(null);
   }
 }

@@ -2,6 +2,7 @@ package org.thoughtslive.jenkins.plugins.hubot.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class MessageTest {
@@ -11,6 +12,6 @@ public class MessageTest {
     final Message message = Message.builder().message("actualMessage").build();
 
     assertThat(message.toString()).isEqualTo(
-        "Message(message=actualMessage, status=null, extraData=null, userName=null, userId=null, stepName=null, envVars=null, ts=0)");
+        "Message(message=actualMessage, status=null, extraData=null, userName=null, buildCause=null, userId=null, stepName=null, envVars=null, tokens=null, ts=0)");
   }
 }

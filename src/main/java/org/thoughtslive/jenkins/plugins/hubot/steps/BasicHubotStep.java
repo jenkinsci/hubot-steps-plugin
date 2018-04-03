@@ -14,7 +14,7 @@ import org.kohsuke.stapler.DataBoundSetter;
  */
 public abstract class BasicHubotStep extends Step implements Serializable {
 
-  private static final long serialVersionUID = -4439535326265986082L;
+  private static final long serialVersionUID = 682814063675194401L;
 
   @Getter
   @DataBoundSetter
@@ -27,10 +27,11 @@ public abstract class BasicHubotStep extends Step implements Serializable {
   @Getter
   @DataBoundSetter
   @Setter
-  private boolean failOnError = true;
+  private String failOnError;
 
   @Getter
   @DataBoundSetter
+  @Setter
   private String url;
 
   @Getter
@@ -44,5 +45,9 @@ public abstract class BasicHubotStep extends Step implements Serializable {
   @Getter
   @DataBoundSetter
   private Map extraData;
+
+  @Getter
+  @DataBoundSetter
+  private String tokens;
 
 }

@@ -3,12 +3,23 @@ package org.thoughtslive.jenkins.plugins.hubot.config.notifications;
 import hudson.model.Result;
 import org.thoughtslive.jenkins.plugins.hubot.Messages;
 
+/**
+ * Notification Type.
+ *
+ * @author Naresh Rayapati.
+ */
 public enum Type {
 
-  STARTED(true) {
+  STARTED {
     @Override
     public String getStatus() {
       return Messages.Started();
+    }
+  },
+  INFO {
+    @Override
+    public String getStatus() {
+      return Messages.Info();
     }
   },
   ABORTED {
@@ -48,16 +59,6 @@ public enum Type {
     }
   };
 
-  private final boolean startType;
-
-  private Type() {
-    this(false);
-  }
-
-  private Type(boolean startType) {
-    this.startType = startType;
-  }
-
   public static final Type fromResults(Result previousResult, Result result) {
     if (result == Result.ABORTED) {
       return ABORTED;
@@ -79,8 +80,4 @@ public enum Type {
   }
 
   public abstract String getStatus();
-
-  public boolean isStartType() {
-    return startType;
-  }
 }

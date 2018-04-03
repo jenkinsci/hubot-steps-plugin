@@ -10,38 +10,43 @@
   <f:entry title="URL" field="url">
     <f:textbox/>
   </f:entry>
-  <f:entry title="FolderName as Room" field="useFolderName">
-    <f:checkbox default="false"/>
-  </f:entry>
   <f:entry title="Room" field="room">
     <f:textbox/>
   </f:entry>
-  <f:entry title="Fail On Error" field="failOnError">
-    <f:checkbox default="true"/>
+  <f:entry title="Use Folder Name as Room" field="useFolderName">
+    <f:checkbox default="false"/>
   </f:entry>
-  <f:entry title="${%Notifications}" field="notifications">
-    <table width="100%">
-      <tr style="text-align:left">
-        <th width="10%">${%Enabled}</th>
-        <th width="15%">${%Type}</th>
-        <th width="15%">${%Room}</th>
-        <th width="55%">${%Tokens}</th>
-        <th width="5%"></th>
-      </tr>
-    </table>
-    <f:repeatable field="notifications">
-      <table style="width:100%">
-        <st:include page="config.jelly" class="${descriptor.clazz}" />
+  <f:entry title="Room Prefix" field="roomPrefix">
+    <f:textbox/>
+  </f:entry>
+  <f:advanced>
+    <f:entry title="Fail On Error" field="failOnError">
+      <f:checkbox default="true"/>
+    </f:entry>
+    <f:entry title="${%Notifications}" field="notifications">
+      <table width="100%">
+        <tr style="text-align:left">
+          <th width="10%">Enabled</th>
+          <th width="15%">Type</th>
+          <th width="15%">Room(s)</th>
+          <th width="55%">Token(s)</th>
+          <th width="5%"></th>
+        </tr>
       </table>
-    </f:repeatable>
-  </f:entry>
+      <f:repeatable field="notifications">
+        <table style="width:100%">
+          <st:include page="config.jelly" class="${descriptor.clazz}" />
+        </table>
+      </f:repeatable>
+    </f:entry>
+  </f:advanced>
   <f:entry>
-    <f:validateButton title="${%Validate Site}"
-      method="validate" with="name,url,room,failOnError,useFolderName" />
+    <f:validateButton title="${%Validate Hubot Site}"
+      method="validate" with="name,url,room,roomPrefix,useFolderName" />
   </f:entry>
   <f:entry title="">
     <div align="right">
-      <f:repeatableDeleteButton value="Delete Site"/>
+      <f:repeatableDeleteButton value="Delete Hubot Site"/>
     </div>
   </f:entry>
 </j:jelly>

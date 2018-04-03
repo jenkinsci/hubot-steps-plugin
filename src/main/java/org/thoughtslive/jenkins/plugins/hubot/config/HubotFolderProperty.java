@@ -18,13 +18,13 @@ import org.kohsuke.stapler.StaplerRequest;
  *
  * @author Naresh Rayapati
  */
-public class FolderProperty extends AbstractFolderProperty<AbstractFolder<?>> {
+public class HubotFolderProperty extends AbstractFolderProperty<AbstractFolder<?>> {
 
   @Getter
   private final CopyOnWriteList<HubotSite> sites = new CopyOnWriteList<>();
 
   @DataBoundConstructor
-  public FolderProperty() {
+  public HubotFolderProperty() {
   }
 
   @Override

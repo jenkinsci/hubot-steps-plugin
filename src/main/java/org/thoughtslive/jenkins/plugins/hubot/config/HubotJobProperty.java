@@ -23,9 +23,9 @@ import org.kohsuke.stapler.DataBoundConstructor;
  * @author Naresh Rayapati
  */
 @Builder
-public class JobProperty extends hudson.model.JobProperty implements ExtensionPoint {
+public class HubotJobProperty extends hudson.model.JobProperty implements ExtensionPoint {
 
-  private static final Logger LOGGER = Logger.getLogger(JobProperty.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(HubotJobProperty.class.getName());
 
   // TODO - Update to select multiple sites for now I didn't find a way to multiselect in Jenkins.
   @Getter
@@ -35,7 +35,7 @@ public class JobProperty extends hudson.model.JobProperty implements ExtensionPo
   private boolean enableNotifications;
 
   @DataBoundConstructor
-  public JobProperty(String siteNames, boolean enableNotifications) {
+  public HubotJobProperty(String siteNames, boolean enableNotifications) {
     this.siteNames = siteNames;
     this.enableNotifications = enableNotifications;
   }
@@ -64,18 +64,25 @@ public class JobProperty extends hudson.model.JobProperty implements ExtensionPo
       hubotSites.add(new Option(
           "Optional - Please select, otherwise it will use default site from parent folder(s)/global.",
           ""));
+      String folderName = null;
 
+      // Parent folder(s) sites.
       ItemGroup parent = project.getParent();
       while (parent != null) {
         if (parent instanceof AbstractFolder) {
           AbstractFolder folder = (AbstractFolder) parent;
-          FolderProperty jfp = (FolderProperty) folder.getProperties()
-              .get(FolderProperty.class);
+          if (folderName == null) {
+            folderName = folder.getName();
+          } else {
+            folderName = folder.getName() + " » " + folderName;
+          }
+          HubotFolderProperty jfp = (HubotFolderProperty) folder.getProperties()
+              .get(HubotFolderProperty.class);
           if (jfp != null) {
             HubotSite[] sites = jfp.getSites();
             if (sites != null && sites.length > 0) {
               for (HubotSite site : sites) {
-                hubotSites.add(new Option(site.getName(), site.getName()));
+                hubotSites.add(new Option(folderName + " - " + site.getName(), site.getName()));
               }
             }
           }
@@ -88,8 +95,9 @@ public class JobProperty extends hudson.model.JobProperty implements ExtensionPo
         }
       }
 
+      // Query global sites.
       for (HubotSite site : new GlobalConfig().getSites()) {
-        hubotSites.add(new Option(site.getName(), site.getName()));
+        hubotSites.add(new Option("Global - " + site.getName(), site.getName()));
       }
 
       return new ListBoxModel(hubotSites);

@@ -25,7 +25,7 @@ public final class GlobalConfig extends GlobalConfiguration {
 
   @Override
   public String getDisplayName() {
-    return "Hubot Steps: Config";
+    return "Hubot Steps";
   }
 
   public HubotSite[] getSites() {

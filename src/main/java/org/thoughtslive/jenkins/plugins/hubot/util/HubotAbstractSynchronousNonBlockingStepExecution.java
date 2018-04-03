@@ -1,10 +1,8 @@
 package org.thoughtslive.jenkins.plugins.hubot.util;
 
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.buildErrorResponse;
-import static org.thoughtslive.jenkins.plugins.hubot.util.Common.log;
 
 import com.google.common.annotations.VisibleForTesting;
-import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Util;
 import hudson.model.Run;
@@ -30,17 +28,21 @@ import org.thoughtslive.jenkins.plugins.hubot.steps.BasicHubotStep;
 public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
     extends SynchronousNonBlockingStepExecution<T> {
 
-  private static final long serialVersionUID = -8253380624161445367L;
+  private static final long serialVersionUID = -6557391471762434587L;
+
   protected transient PrintStream logger = null;
-  protected transient String siteName = null;
   protected transient HubotService hubotService = null;
-  protected transient boolean failOnError = false;
+  protected transient boolean failOnError = true;
   protected transient String room = null;
   protected transient String buildUserName = null;
+  protected transient String buildCause = null;
   protected transient String buildUserId = null;
   protected transient EnvVars envVars;
-  private transient Run<?, ?> run;
-  private transient TaskListener listener;
+  protected transient HubotSite site = null;
+  protected transient Run<?, ?> run;
+  protected transient TaskListener listener;
+  private String failOnErrorStr = null;
+  private String url = null;
 
   protected HubotAbstractSynchronousNonBlockingStepExecution(StepContext context)
       throws IOException, InterruptedException {
@@ -57,46 +59,71 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
     String errorMessage = null;
     URL mainURL = null;
 
-    final String failOnErrorStr = Util.fixEmpty(envVars.get("HUBOT_FAIL_ON_ERROR"));
-    if (failOnErrorStr == null) {
-      failOnError = step.isFailOnError();
-    } else {
-      failOnError = Boolean.parseBoolean(failOnErrorStr);
-    }
-
-    final String url =
-        Util.fixEmpty(step.getUrl()) == null ? envVars.get("HUBOT_URL") : step.getUrl();
-
-    if (Util.fixEmpty(url) == null) {
-      errorMessage = "Hubot: HUBOT_URL is empty or null.";
-    } else {
-      try {
-        mainURL = new URL(url);
-      } catch (MalformedURLException e) {
-        errorMessage = "Hubot: Malformed HUBOT_URL.";
-      }
-    }
-
-    room =
-        Util.fixEmpty(step.getRoom()) == null ? envVars.get("HUBOT_DEFAULT_ROOM") : step.getRoom();
-    if (Util.fixEmpty(room) == null) {
-      errorMessage = "Hubot: Room is empty or null.";
-    }
-
     final String message = step.getMessage();
     if (Util.fixEmpty(message) == null) {
       errorMessage = "Hubot: Message is empty or null.";
     }
 
+    room = Util.fixEmpty(step.getRoom());
+    url = Util.fixEmpty(step.getUrl());
+    failOnErrorStr = Util.fixEmpty(step.getFailOnError());
+
+    if (room == null && url == null && failOnErrorStr == null) {
+      site = HubotSite.get(run.getParent(), listener, step.getSite());
+    }
+
+    if (site == null) {
+      if (url == null) {
+        url = envVars.get("HUBOT_URL");
+      }
+      if (room == null) {
+        room = envVars.get("HUBOT_DEFAULT_ROOM");
+      }
+      if (failOnErrorStr == null) {
+        failOnErrorStr = envVars.get("HUBOT_FAIL_ON_ERROR");
+      }
+    }
+
+    if (site == null) {
+      if (Util.fixEmpty(url) == null) {
+        errorMessage = "Hubot: HUBOT_URL or step parameter equivalent is empty or null.";
+      } else {
+        try {
+          mainURL = new URL(Common.sanitizeURL(url));
+        } catch (MalformedURLException e) {
+          errorMessage = "Hubot: Malformed HUBOT_URL.";
+        }
+      }
+      if (room == null) {
+        errorMessage = "Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.";
+      }
+      if (failOnErrorStr != null) {
+        try {
+          failOnError = Boolean.parseBoolean(failOnErrorStr);
+        } catch (Exception e) {
+          errorMessage = "Hubot: Unable to parse failOnError.";
+        }
+      }
+    } else {
+      if (Util.fixEmpty(site.getUrl().toString()) == null) {
+        errorMessage = "Hubot: url is empty or null on site: " + site.getName();
+      }
+      if (Util.fixEmpty(site.getRoom()) == null) {
+        errorMessage = "Hubot: Room is empty or null on site: " + site.getName();
+      }
+      room = site.getRoom();
+      failOnError = site.isFailOnError();
+    }
+
     if (errorMessage != null) {
-      System.out.println(errorMessage);
       return buildErrorResponse(new RuntimeException(errorMessage));
     }
 
-    setHubotService(mainURL, room);
+    setHubotService(site, mainURL, room);
 
     buildUserName = Common.prepareBuildUserName(run.getCauses(), envVars);
     buildUserId = Common.prepareBuildUserId(run.getCauses(), envVars);
+    buildCause = Common.prepareBuildCause(run.getCauses());
 
     return null;
 
@@ -107,35 +134,12 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
     this.hubotService = service;
   }
 
-  private void setHubotService(final URL url, final String room) {
-    final HubotSite site = HubotSite.builder().url(url).room(room).build();
+  private void setHubotService(HubotSite site, final URL url, final String room) {
+    if (site == null) {
+      site = HubotSite.builder().url(url).room(room).build();
+    }
     if (this.hubotService == null) {
       this.hubotService = new HubotService(site);
     }
-  }
-
-  /**
-   * Log code and error message if any.
-   *
-   * @return same response back.
-   * @throws AbortException if failOnError is true and response is not successful.
-   */
-  @SuppressWarnings("hiding")
-  protected <T> ResponseData<T> logResponse(ResponseData<T> response) throws AbortException {
-
-    System.out.println(response.toString());
-    if (response.isSuccessful()) {
-      log(logger, "Successful. Code: " + response.getCode());
-    } else {
-      log(logger, "Error Code: " + response.getCode());
-      log(logger, "Error Message: " + response.getError());
-
-      System.out.println(failOnError);
-      if (failOnError) {
-        throw new AbortException(response.getError());
-      }
-    }
-
-    return response;
   }
 }

@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
   <tr>
     <td style="width: 10%">
@@ -9,7 +10,7 @@
       </f:enum>
     </td>
     <td style="width: 15%">
-      <f:textbox field="roomName" />
+      <f:textbox field="roomNames" />
     </td>
     <td style="width: 55%">
       <f:textbox field="tokens" />

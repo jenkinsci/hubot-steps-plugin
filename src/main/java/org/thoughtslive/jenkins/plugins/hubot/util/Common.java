@@ -1,13 +1,22 @@
 package org.thoughtslive.jenkins.plugins.hubot.util;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import hudson.AbortException;
 import hudson.EnvVars;
+import hudson.FilePath;
 import hudson.Util;
 import hudson.model.Cause;
 import hudson.model.Cause.UpstreamCause;
 import hudson.model.Cause.UserIdCause;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.apache.log4j.Logger;
+import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import retrofit2.Response;
 
@@ -17,6 +26,8 @@ import retrofit2.Response;
  * @author Naresh Rayapati
  */
 public class Common {
+
+  private static final Logger LOGGER = Logger.getLogger(Common.class.getName());
 
   /**
    * Attaches the "/" at end of given url.
@@ -138,6 +149,30 @@ public class Common {
   }
 
   /**
+   * Retrun the build cause.
+   *
+   * @return build cause.
+   */
+  public static String prepareBuildCause(List<Cause> causes) {
+    String buildCause = null;
+
+    if (causes != null && causes.size() > 0) {
+      for (Cause cause : causes) {
+
+        if (cause instanceof UserIdCause) {
+          buildCause = ((UserIdCause) causes.get(0)).getUserName();
+        } else if (cause instanceof UpstreamCause) {
+          List<Cause> upstreamCauses = ((UpstreamCause) cause).getUpstreamCauses();
+          buildCause = prepareBuildCause(upstreamCauses);
+        } else {
+          buildCause = cause.getClass().getSimpleName();
+        }
+      }
+    }
+    return buildCause == null ? buildCause : buildCause.replace("Cause", "");
+  }
+
+  /**
    * Return the current build user Id.
    *
    * @param causes build causes.
@@ -158,11 +193,51 @@ public class Common {
     return buildUserId;
   }
 
-  public enum STEP {
-    SEND, APPROVE, BUILD, TEST
+  /**
+   * Exapands given macro, see Token Marco plugin.
+   */
+  @SuppressFBWarnings
+  public static Map expandMacros(String tokens, Run<?, ?> run, FilePath ws, TaskListener listener) {
+    Map tokenMap = new HashMap<String, String>();
+    if (Util.fixEmpty(tokens) != null) {
+      for (String token : tokens.split(",")) {
+        token = token.trim();
+        String tokenExpand = null;
+        try {
+          tokenExpand = TokenMacro.expand(run, ws, listener, "${" + token + "}");
+        } catch (Exception e) {
+          LOGGER.info("Hubot: ${" + token + "} not found.");
+        }
+        tokenMap.put(token, tokenExpand);
+      }
+    }
+    return tokenMap;
   }
 
-  public enum STATUS {
-    INFO, SUCCESS, WARN, ERROR
+  /**
+   * Log code and error message if any.
+   *
+   * @return response data.
+   */
+  @SuppressWarnings("hiding")
+  public static <T> ResponseData<T> logResponse(ResponseData<T> response, final PrintStream logger,
+      final boolean failOnError) throws AbortException {
+
+    if (response.isSuccessful()) {
+      log(logger, "Hubot: Successful. Code: " + response.getCode());
+    } else {
+      log(logger, "Hubot: Error Code: " + response.getCode());
+      log(logger, "Hubot: Error Message: " + response.getError());
+
+      if (failOnError) {
+        throw new AbortException(response.getError());
+      }
+    }
+
+    return response;
+  }
+
+  public enum STEP {
+    SEND, APPROVE, BUILD, TEST
   }
 }

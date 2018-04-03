@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.thoughtslive.jenkins.plugins.hubot.api.Message;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData.ResponseDataBuilder;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
@@ -81,20 +80,22 @@ public class SendStepTest {
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.run();
-    }).withMessage("Hubot: HUBOT_URL is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_URL or step parameter equivalent is empty or null.").withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
   @Test
   public void testWithEmptyRoomThrowsAbortException() throws Exception {
     final SendStep step = new SendStep("", "message");
+    step.setUrl("http://localhost:9090/");
+
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.run();
-    }).withMessage("Hubot: Room is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.").withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
@@ -131,7 +132,7 @@ public class SendStepTest {
   @Test
   public void testFailOnErrorFalseDoesNotThrowsAbortException() throws Exception {
     final SendStep step = new SendStep("", "");
-    step.setFailOnError(false);
+    step.setFailOnError("false");
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -152,9 +153,7 @@ public class SendStepTest {
     stepExecution.run();
 
     // Assert Test
-    verify(hubotServiceMock, times(1)).sendMessage(
-        Message.builder().message("message").userName("anonymous").stepName("Send")
-            .envVars(envVarsMock).build());
-    assertThat(step.isFailOnError()).isEqualTo(true);
+    verify(hubotServiceMock, times(1)).sendMessage(any());
+    assertThat(step.getFailOnError()).isEqualTo(null);
   }
 }

@@ -4,7 +4,9 @@ import static org.thoughtslive.jenkins.plugins.hubot.util.Common.buildErrorRespo
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.parseResponse;
 import static org.thoughtslive.jenkins.plugins.hubot.util.Common.sanitizeURL;
 
+import hudson.Util;
 import okhttp3.OkHttpClient;
+import org.apache.log4j.Logger;
 import org.thoughtslive.jenkins.plugins.hubot.api.Message;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.config.HubotSite;
@@ -18,6 +20,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
  * @author Naresh Rayapati
  */
 public class HubotService {
+
+  private static final Logger LOGGER = Logger.getLogger(HubotService.class.getName());
 
   private final HubotEndPoints hubotEndPoints;
   private final HubotSite hubotSite;
@@ -41,10 +45,17 @@ public class HubotService {
    */
   public ResponseData<Void> sendMessage(final Message message) {
     try {
-      return parseResponse(hubotEndPoints.sendMessage(this.hubotSite.getRoom(), message).execute());
+      String room;
+      if (this.hubotSite.isUseFolderName()
+          && Util.fixEmpty(this.hubotSite.getRoomPrefix()) != null) {
+        room = this.hubotSite.getRoomPrefix().trim() + this.hubotSite.getRoom().trim();
+      } else {
+        room = this.hubotSite.getRoom().trim();
+      }
+
+      return parseResponse(hubotEndPoints.sendMessage(room, message).execute());
     } catch (Exception e) {
       return buildErrorResponse(e);
     }
-
   }
 }
