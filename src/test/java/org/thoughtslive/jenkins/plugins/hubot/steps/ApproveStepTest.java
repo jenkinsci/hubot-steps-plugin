@@ -19,12 +19,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData.ResponseDataBuilder;
-import org.thoughtslive.jenkins.plugins.hubot.config.HubotSite;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 
 /**
@@ -81,7 +79,8 @@ public class ApproveStepTest {
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.start();
-    }).withMessage("Hubot: HUBOT_URL or step parameter equivalent is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_URL or step parameter equivalent is empty or null.")
+        .withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
@@ -95,7 +94,8 @@ public class ApproveStepTest {
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.start();
-    }).withMessage("Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.")
+        .withStackTraceContaining("AbortException")
         .withNoCause();
   }
 

@@ -2,7 +2,6 @@ package org.thoughtslive.jenkins.plugins.hubot.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class MessageTest {

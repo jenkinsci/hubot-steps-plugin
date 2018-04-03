@@ -33,7 +33,7 @@ public class BuildListener extends RunListener<Run<?, ?>> {
       for (Config config : site.getNotifications()) {
         if (config.isNotifyEnabled()) {
           if (config.getNotificationType().equals(type)) {
-            if(Util.fixEmpty(config.getRoomNames()) != null) {
+            if (Util.fixEmpty(config.getRoomNames()) != null) {
               for (String roomName : config.getRoomNames().split(",")) {
                 sendMessage(run, listener, type, site, roomName.trim(), config);
               }
@@ -53,7 +53,7 @@ public class BuildListener extends RunListener<Run<?, ?>> {
     if (site != null && site.getNotifications() != null) {
       for (Config config : site.getNotifications()) {
         if (config.isNotifyEnabled() && config.getNotificationType().equals(Type.STARTED)) {
-          if(Util.fixEmpty(config.getRoomNames()) != null) {
+          if (Util.fixEmpty(config.getRoomNames()) != null) {
             for (String roomName : config.getRoomNames().split(",")) {
               sendMessage(run, listener, Type.STARTED, site, roomName.trim(), config);
             }
