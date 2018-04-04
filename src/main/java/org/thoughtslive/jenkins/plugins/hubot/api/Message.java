@@ -29,7 +29,7 @@ public class Message implements Serializable {
   private String message;
 
   @JsonProperty("status")
-  private String status = Type.INFO.name();
+  private String status = Type.SUCCESS.name();
 
   @JsonProperty("extraData")
   private Map extraData;

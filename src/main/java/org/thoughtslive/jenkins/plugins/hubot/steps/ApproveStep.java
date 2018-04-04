@@ -136,7 +136,7 @@ public class ApproveStep extends BasicHubotStep {
     public boolean start() throws Exception {
 
       ResponseData<Void> response = verifyCommon(step);
-      final String status = step.getStatus() == null ? Type.INFO.name() : step.getStatus();
+      final String status = step.getStatus() == null ? Type.SUCCESS.name() : step.getStatus();
 
       if (response == null) {
         if (this.site != null) {

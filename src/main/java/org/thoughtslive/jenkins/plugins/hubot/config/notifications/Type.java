@@ -16,12 +16,6 @@ public enum Type {
       return Messages.Started();
     }
   },
-  INFO {
-    @Override
-    public String getStatus() {
-      return Messages.Info();
-    }
-  },
   ABORTED {
     @Override
     public String getStatus() {

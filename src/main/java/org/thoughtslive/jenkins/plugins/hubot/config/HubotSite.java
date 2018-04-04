@@ -278,7 +278,7 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
         final Message message = Message.builder().stepName(Common.STEP.TEST.name())
             .message("Hubot Site: " + name + " configured successfully.")
             .ts(System.currentTimeMillis()).extraData(extraData)
-            .userId(userId).userName(userName).status(Type.INFO.name()).build();
+            .userId(userId).userName(userName).status(Type.SUCCESS.name()).build();
         HubotSite site = HubotSite.builder().room(room).url(new URL(Common.sanitizeURL(url)))
             .build();
         HubotService service = new HubotService(site);
