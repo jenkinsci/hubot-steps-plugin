@@ -6,17 +6,21 @@ import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.Util;
 import hudson.model.Item;
 import hudson.model.ItemGroup;
+import hudson.model.ParameterDefinition;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.Getter;
 import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
@@ -25,6 +29,7 @@ import org.jenkinsci.plugins.workflow.support.steps.input.InputStep;
 import org.jenkinsci.plugins.workflow.support.steps.input.InputStepExecution;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.thoughtslive.jenkins.plugins.hubot.api.Message;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.config.GlobalConfig;
@@ -44,9 +49,28 @@ public class ApproveStep extends BasicHubotStep {
 
   private static final long serialVersionUID = 2750983740619607854L;
 
+  @Getter
+  @DataBoundSetter
+  private String id;
+
+  @Getter
+  @DataBoundSetter
+  private String submitter;
+
+  @Getter
+  @DataBoundSetter
+  private String ok;
+
+  @Getter
+  @DataBoundSetter
+  private String submitterParameter;
+
+  @Getter
+  @DataBoundSetter
+  private List<ParameterDefinition> parameters = Collections.emptyList();
+
   @DataBoundConstructor
-  public ApproveStep(final String room, final String message) {
-    this.room = room;
+  public ApproveStep(final String message) {
     this.message = message;
   }
 
@@ -149,6 +173,7 @@ public class ApproveStep extends BasicHubotStep {
 
         FilePath ws = getContext().get(FilePath.class);
         final Map tokens = Common.expandMacros(step.getTokens(), run, ws, listener);
+        final String stepId = Util.fixEmpty(step.getId()) == null ? "Proceed" : step.getId().trim();
 
         final Message message = Message.builder().message(step.getMessage()).userName(buildUserName)
             .userId(buildUserId)
@@ -157,7 +182,14 @@ public class ApproveStep extends BasicHubotStep {
             .tokens(tokens)
             .extraData(step.getExtraData())
             .envVars(envVars).stepName(STEP.APPROVE.name()).ts(System.currentTimeMillis())
+            .approveId(stepId)
+            .submitter(step.getSubmitter())
+            .submitterParameter(step.getSubmitterParameter())
+            // TODO - Not Serializable, need to investigate on why.
+            //.parameters(step.getParameters())
+            .ok(step.getOk())
             .build();
+
         response = hubotService.sendMessage(message);
 
       }
@@ -166,10 +198,17 @@ public class ApproveStep extends BasicHubotStep {
 
       try {
         final InputStep input = new InputStep(step.getMessage());
-        input.setId("Proceed");
-        // Until input step is being uplifted to 2.5.
-        final Step step = input;
-        final InputStepExecution inputExecution = (InputStepExecution) step.start(getContext());
+        if(Util.fixEmpty(step.getId()) != null) {
+          input.setId(step.getId().trim());
+        } else {
+          input.setId("Proceed");
+        }
+        input.setSubmitter(step.getSubmitter());
+        input.setOk(step.getOk());
+        input.setParameters(step.getParameters());
+        input.setSubmitterParameter(step.getSubmitterParameter());
+
+        final InputStepExecution inputExecution = (InputStepExecution) input.start(getContext());
         return inputExecution.start();
       } catch (final Exception e) {
         if (failOnError) {

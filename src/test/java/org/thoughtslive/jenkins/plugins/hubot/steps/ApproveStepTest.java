@@ -69,7 +69,8 @@ public class ApproveStepTest {
 
   @Test
   public void testWithEmptyHubotURLThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "message");
+    final ApproveStep step = new ApproveStep("message");
+    step.setRoom("room");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -86,7 +87,7 @@ public class ApproveStepTest {
 
   @Test
   public void testWithEmptyRoomThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("", "message");
+    final ApproveStep step = new ApproveStep("message");
     step.setUrl("http://localhost:9090/");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
@@ -101,7 +102,8 @@ public class ApproveStepTest {
 
   @Test
   public void testWithEmptyMessageThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "");
+    final ApproveStep step = new ApproveStep("");
+    step.setRoom("");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -114,7 +116,8 @@ public class ApproveStepTest {
 
   @Test
   public void testErrorMessageSend() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "message");
+    final ApproveStep step = new ApproveStep("message");
+    step.setRoom("room");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -130,7 +133,7 @@ public class ApproveStepTest {
 
   @Test
   public void testFailOnErrorFalseDoesNotThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("", "");
+    final ApproveStep step = new ApproveStep("message");
     step.setFailOnError("false");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
@@ -144,7 +147,8 @@ public class ApproveStepTest {
 
   @Test
   public void testSuccessfulMessageSend() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "message");
+    final ApproveStep step = new ApproveStep("message");
+    step.setRoom("room");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 

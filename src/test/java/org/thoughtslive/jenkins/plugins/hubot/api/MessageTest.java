@@ -11,6 +11,6 @@ public class MessageTest {
     final Message message = Message.builder().message("actualMessage").build();
 
     assertThat(message.toString()).isEqualTo(
-        "Message(message=actualMessage, status=null, extraData=null, userName=null, buildCause=null, userId=null, stepName=null, envVars=null, tokens=null, ts=0)");
+        "Message(message=actualMessage, status=null, extraData=null, userName=null, buildCause=null, userId=null, stepName=null, envVars=null, tokens=null, ts=0, approveId=null, submitter=null, submitterParameter=null, ok=null, parameters=null)");
   }
 }

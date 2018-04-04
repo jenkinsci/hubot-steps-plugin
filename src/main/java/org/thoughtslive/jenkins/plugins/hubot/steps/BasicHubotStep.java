@@ -18,10 +18,12 @@ public abstract class BasicHubotStep extends Step implements Serializable {
 
   @Getter
   @DataBoundSetter
+  @Setter
   protected String room;
 
   @Getter
   @DataBoundSetter
+  @Setter
   protected String message;
 
   @Getter
@@ -36,18 +38,22 @@ public abstract class BasicHubotStep extends Step implements Serializable {
 
   @Getter
   @DataBoundSetter
+  @Setter
   private String status;
 
   @Getter
   @DataBoundSetter
+  @Setter
   private String site;
 
   @Getter
   @DataBoundSetter
+  @Setter
   private Map extraData;
 
   @Getter
   @DataBoundSetter
+  @Setter
   private String tokens;
 
 }

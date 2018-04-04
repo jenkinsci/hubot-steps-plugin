@@ -62,6 +62,11 @@ public abstract class HubotStepExecution<T> extends StepExecution {
       errorMessage = "Hubot: Message is empty or null.";
     }
 
+    // Fail immediately.
+    if (errorMessage != null) {
+      return buildErrorResponse(new RuntimeException(errorMessage));
+    }
+
     room = Util.fixEmpty(step.getRoom());
     url = Util.fixEmpty(step.getUrl());
     failOnErrorStr = Util.fixEmpty(step.getFailOnError());

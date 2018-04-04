@@ -41,8 +41,7 @@ public class SendStep extends BasicHubotStep {
   private static final long serialVersionUID = 5310947910434533239L;
 
   @DataBoundConstructor
-  public SendStep(final String room, final String message) {
-    this.room = room;
+  public SendStep(final String message) {
     this.message = message;
   }
 

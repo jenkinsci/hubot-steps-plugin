@@ -70,7 +70,8 @@ public class SendStepTest {
 
   @Test
   public void testWithEmptyHubotURLThrowsAbortException() throws Exception {
-    final SendStep step = new SendStep("room", "message");
+    final SendStep step = new SendStep("message");
+    step.setRoom("room");
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -87,7 +88,7 @@ public class SendStepTest {
 
   @Test
   public void testWithEmptyRoomThrowsAbortException() throws Exception {
-    final SendStep step = new SendStep("", "message");
+    final SendStep step = new SendStep("message");
     step.setUrl("http://localhost:9090/");
 
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
@@ -103,7 +104,8 @@ public class SendStepTest {
 
   @Test
   public void testWithEmptyMessageThrowsAbortException() throws Exception {
-    final SendStep step = new SendStep("room", "");
+    final SendStep step = new SendStep("");
+    step.setRoom("room");
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -116,7 +118,8 @@ public class SendStepTest {
 
   @Test
   public void testErrorMessageSend() throws Exception {
-    final SendStep step = new SendStep("room", "message");
+    final SendStep step = new SendStep("message");
+    step.setRoom("room");
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -133,7 +136,7 @@ public class SendStepTest {
 
   @Test
   public void testFailOnErrorFalseDoesNotThrowsAbortException() throws Exception {
-    final SendStep step = new SendStep("", "");
+    final SendStep step = new SendStep("message");
     step.setFailOnError("false");
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
@@ -147,7 +150,8 @@ public class SendStepTest {
 
   @Test
   public void testSuccessfulMessageSend() throws Exception {
-    final SendStep step = new SendStep("room", "message");
+    final SendStep step = new SendStep("message");
+    step.setRoom("room");
     stepExecution = new SendStep.SendStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 

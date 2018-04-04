@@ -3,12 +3,17 @@ package org.thoughtslive.jenkins.plugins.hubot.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import hudson.EnvVars;
+import hudson.model.ParameterDefinition;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.thoughtslive.jenkins.plugins.hubot.config.notifications.Type;
 
 /**
@@ -54,5 +59,21 @@ public class Message implements Serializable {
 
   @JsonProperty("ts")
   private long ts;
+
+  // Approve step related params.
+  @JsonProperty("approveId")
+  private String approveId;
+
+  @JsonProperty("submitter")
+  private String submitter;
+
+  @JsonProperty("submitterParameter")
+  private String submitterParameter;
+
+  @JsonProperty("ok")
+  private String ok;
+
+  @JsonProperty("parameters")
+  private List<ParameterDefinition> parameters;
 
 }
