@@ -31,12 +31,18 @@ toc::[]
 === **Global Config**
 * List of Global Hubot Sites
 
+image::images/globalSite.png[Global Site,900]
+
 === **Folder Config**
 * List of Hubot Sites
+
+image::images/folderSite.png[Floder Site,900]
 
 === **Job Config**
 * *Enable Notifications* - defaults to `false`.
 * *Hubot Site Name* `optional`, given there is a default site at folder(or one of the parent folders) level/ global level.
+
+image::images/jobConfig.png[Job Config,900]
 
 == Build Notifications
 
@@ -50,6 +56,8 @@ Supports sending notifications for the following build statuses.
 * Build Back to Normal.
 * Module not built.
 
+image::images/buildNotifications.png[Build Notifications,900]
+
 == Pipeline Steps
 
 The following Jenkins pipeline steps are available.
@@ -60,7 +68,7 @@ Sends a given message to site/room.
 
 [source,groovy]
 ----
-hubotSend message: 'Releasing this project.'
+hubotSend message: 'Releasing Test project.'
 ----
 
 * *message* `required`, actual message to send.
@@ -71,13 +79,6 @@ hubotSend message: 'Releasing this project.'
 * *url* `optional`, if it is provided as global environment variable *HUBOT_URL* or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 * *room* `optional`, if it is provided as global environment variable *HUBOT_DEFAULT_ROOM* or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
 * *failOnError* `optional` and by default it is `true`, if any error it won't abort the job., it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.
-
-==== Examples
-
-[source,groovy]
-----
-  hubotSend message: 'Releasing this project.'
-----
 
 === **hubotApprove**
 
@@ -96,20 +97,38 @@ hubotApprove message: 'Promote to Production?'
 * *url* `optional`, if it is provided as global environment variable *HUBOT_URL* or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 * *room* `optional`, if it is provided as global environment variable *HUBOT_DEFAULT_ROOM* or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
 * *failOnError* `optional` and by default it is `true`, if any error it won't abort the job., it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.
+* *id* `optional`, defaults to *Proceed*, refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
+* *submitter* `optional`, comma separated list of users who can provide input. Refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
+* *ok* `optional`, Proceed button label, Refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
+* *submitterParameter* `optional` If specified, this is the name of the return value that will contain the ID of the user that approves this input. Refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
+* *parameters* `optional`, Request that the submitter specify one or more parameter values when approving. Refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
 
-==== Examples
+==== Example
 
 [source,groovy]
 ----
-  hubotApprove message: 'Promote to Production?'
+hubotSend message: "*Release Started*. \n Releasing Test Project. :sunny: \n<!here> <!channel> <@nrayapati> ", tokens: "BUILD_NUMBER,BUILD_ID", status: 'STARTED'
+
+hubotSend message: "*Release Completed*. \n Releaseing Test Project.", tokens: "BUILD_NUMBER,BUILD_ID", status: 'SUCCESS'
+
+hubotApprove message: 'Promote to Staging?', tokens: "BUILD_NUMBER, BUILD_DURATION", status: 'ABORTED'
+
+hubotSend message: "*Staging Deployment Successful...* \n Deployed Test Project to 192.168.1.175 node.", tokens: "BUILD_NUMBER,BUILD_ID", status: 'SUCCESS'
+
+hubotApprove message: 'Promote to Production?', tokens: "BUILD_NUMBER, BUILD_DURATION", status: 'ABORTED'
+
+hubotSend message: "*Hooray! Went to Prod... :satisfied:* \n Deployed Test Project to prod(10.12.1.191) node.", tokens: "BUILD_NUMBER,BUILD_ID", status: 'SUCCESS'
 ----
 
-image::images/slack.png[Slack Example,900]
 **Jenkins Approved Job**
+
+image::images/slackProceed.png[Slack Example,900]
 
 image::images/proceed.png[Slack Example,500]
 
 **Jenkins Aborted Job**:
+
+image::images/slackAbort.png[Slack Example,900]
 
 image::images/abort.png[Slack Example,500]
 
@@ -123,30 +142,54 @@ TIP: Please replace scripts on hubot-base repo with the scripts under this hubot
 
 === Already running hubot.
 
-Then just copy over following scripts from `scripts` folder.
+Then just copy over following scripts from `scripts` folder. These are just examples and can be modified based on chat service / per the actual needs.
 
+* https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot_slack.coffee[hubot_slack]
 * https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot.coffee[hubot]
 * https://github.com/jenkinsci/hubot-steps/blob/master/scripts/jenkins.coffee[jenkins]
 
 == Examples
 
-=== With Global Environment Variables
+==== Default Site at Folder/Global level.
+
+[source,groovy]
+----
+hubotSend message: 'test message.'
+hubotApprove message: 'Proceed with building this job?'
+----
+==== With Site Name either at Folder or Global level.
+
+[source,groovy]
+----
+hubotSend message: 'test message.', site: 'release'
+hubotApprove message: 'Proceed with building this job?', site: 'release'
+----
+
+==== Site with Folder Name as Room.
+
+[source,groovy]
+----
+hubotSend message: 'test message.', site: 'release'
+hubotApprove message: 'Proceed with building this job?', site: 'release'
+----
+
+==== With Global Environment Variables / No Default Site at Folder/Global level.
 image::images/global.png[Global,900]
 
 [source,groovy]
 ----
-  hubotSend message: 'test message.'
-  hubotApprove message: 'Proceed with building this job?'
+hubotSend message: 'test message.'
+hubotApprove message: 'Proceed with building this job?'
 ----
-=== withEnv Variables
+==== withEnv Variables / No Default Site at Folder/Global level.
 [source,groovy]
 ----
-  withEnv(['HUBOT_URL=http://192.168.1.176:9999','HUBOT_DEFAULT_ROOM=botlab','HUBOT_FAIL_ON_ERROR=false']) {
-    hubotSend message: 'building job $BUILD_URL'
-    hubotApprove message: 'Proceed with building this job?'
-  }
+withEnv(['HUBOT_URL=http://192.168.1.176:9999','HUBOT_DEFAULT_ROOM=botlab','HUBOT_FAIL_ON_ERROR=false']) {
+  hubotSend message: 'building job $BUILD_URL'
+  hubotApprove message: 'Proceed with building this job?'
+}
 ----
-=== No Environment Variables
+==== No Environment Variables
 
 Screenshot:
 
@@ -154,8 +197,8 @@ image::images/pipeline_syntax.png[Pipeline Syntax,900]
 
 [source,groovy]
 ----
-  hubotSend failOnError: false, message: 'testMessage', room: 'botlab', url: 'http://192.168.1.176:9999/'
-  hubotApprove failOnError: false, message: 'Proceed with building this job?', room: 'botlab', url: 'http://192.168.1.176:9999/'
+hubotSend failOnError: 'false', message: 'testMessage', room: 'botlab', url: 'http://192.168.1.176:9999/'
+hubotApprove failOnError: 'false', message: 'Proceed with building this job?', room: 'botlab', url: 'http://192.168.1.176:9999/'
 ----
 
 == Blue Ocean View

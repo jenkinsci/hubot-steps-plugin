@@ -71,7 +71,12 @@ module.exports = (robot) ->
       jobName = (envVars.JOB_NAME.split('/').map (word) -> word[0].toUpperCase() + word[1..-1]).join ' » '
       title = "Jenkins » " + jobName + " " + envVars.BUILD_DISPLAY_NAME
 
-      attachments = [ { "color": color, "text": message, "title": title, "title_link": envVars.RUN_DISPLAY_URL, "footer": buildCause, "footer_icon": "https://png.icons8.com/color/1600/jenkins.png", "ts": ts, "mrkdwn_in": ["text", "pretext"] }]
+      if stepName == 'APPROVE'
+        jobUrl = envVars.BUILD_URL.replace(envVars.JENKINS_URL, '')
+        attachments = [ { "color": color, "text": message + "\n     *to Proceed reply:* `.j proceed " + jobUrl + "`" + "\n     *to Abort reply:* `.j abort " + jobUrl + "`", "title": title, "title_link": envVars.RUN_DISPLAY_URL, "footer": buildCause, "footer_icon": "https://png.icons8.com/color/1600/jenkins.png", "ts": ts, "mrkdwn_in": ["text", "pretext"] }]
+      else
+        attachments = [ { "color": color, "text": message, "title": title, "title_link": envVars.RUN_DISPLAY_URL, "footer": buildCause, "footer_icon": "https://png.icons8.com/color/1600/jenkins.png", "ts": ts, "mrkdwn_in": ["text", "pretext"] }]
 
     robot.adapter.client.web.chat.postMessage(room, "", {as_user: true, unfurl_links: true, attachments: attachments })
     res.end()
+g
