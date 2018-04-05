@@ -20,6 +20,9 @@
     <f:entry title="Fail On Error" field="failOnError">
       <f:textbox/>
     </f:entry>
+    <f:entry field="extraData" title="Anything Additional Data">
+      <f:textbox/>
+    </f:entry>
     <f:entry field="tokens" title="Token(s)">
       <f:textbox/>
     </f:entry>

@@ -20,8 +20,25 @@
     <f:entry title="Fail On Error" field="failOnError">
       <f:textbox/>
     </f:entry>
+    <f:entry field="extraData" title="Anything Additional Data">
+      <f:textbox/>
+    </f:entry>
     <f:entry field="tokens" title="Token(s)">
       <f:textbox/>
     </f:entry>
-  </f:advanced>
+    <f:entry field="id" title="Custom ID">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="submitter" title="Allowed Submitter">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="ok" title="OK Button Caption">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="submitterParameter" title="Parameter to store the approving submitter">
+      <f:textbox/>
+    </f:entry>
+    <f:entry field="parameters" title="Parameters">
+      <f:repeatableHeteroProperty field="parameters"/>
+    </f:entry>  </f:advanced>
 </j:jelly>
