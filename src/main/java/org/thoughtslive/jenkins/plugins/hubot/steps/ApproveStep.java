@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
-import org.jenkinsci.plugins.workflow.steps.Step;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.jenkinsci.plugins.workflow.steps.StepDescriptor;
 import org.jenkinsci.plugins.workflow.steps.StepExecution;
@@ -198,7 +197,7 @@ public class ApproveStep extends BasicHubotStep {
 
       try {
         final InputStep input = new InputStep(step.getMessage());
-        if(Util.fixEmpty(step.getId()) != null) {
+        if (Util.fixEmpty(step.getId()) != null) {
           input.setId(step.getId().trim());
         } else {
           input.setId("Proceed");

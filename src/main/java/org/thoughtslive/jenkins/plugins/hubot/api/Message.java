@@ -5,15 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import hudson.EnvVars;
 import hudson.model.ParameterDefinition;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
 import org.thoughtslive.jenkins.plugins.hubot.config.notifications.Type;
 
 /**
