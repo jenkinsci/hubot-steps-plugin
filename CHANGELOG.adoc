@@ -3,13 +3,13 @@
 == 2.0.0 (Unreleased)
 
 * https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50608] - Global site configuration to support multiple hubot servers.
-* https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50609] - Folder Level site configuration.
-* https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50610] - Build Notifications. *Hooray!*
-* https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50611] - Support Token Macros.
-* https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50612] - Support sending custom data to hubot server.
-* https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50613] - Send envVars to hubot to support more smart messages.
-* https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50614] - Provide hubot examples for slack attachments.
-* https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50615] - Plugin documentation update.
+* https://issues.jenkins-ci.org/browse/JENKINS-50609[JENKINS-50609] - Folder Level site configuration.
+* https://issues.jenkins-ci.org/browse/JENKINS-50610[JENKINS-50610] - Build Notifications. *Hooray!*
+* https://issues.jenkins-ci.org/browse/JENKINS-50611[JENKINS-50611] - Support Token Macros.
+* https://issues.jenkins-ci.org/browse/JENKINS-50612[JENKINS-50612] - Support sending custom data to hubot server.
+* https://issues.jenkins-ci.org/browse/JENKINS-50613[JENKINS-50613] - Send envVars to hubot to support more smart messages.
+* https://issues.jenkins-ci.org/browse/JENKINS-50614[JENKINS-50614] - Provide hubot examples for slack attachments.
+* https://issues.jenkins-ci.org/browse/JENKINS-50615[JENKINS-50615] - Plugin documentation update.
 * https://issues.jenkins-ci.org/browse/JENKINS-44401[JENKINS-44401] - Enhance hubotApprove to allow more fields that input step supports
 ** Now hubotApprove supports `id`, `submitter`, `ok`, `submitterParameter` and `parameters`.
 * [big red]#Few breaking changes.#
