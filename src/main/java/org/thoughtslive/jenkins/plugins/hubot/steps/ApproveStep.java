@@ -182,7 +182,7 @@ public class ApproveStep extends BasicHubotStep {
             .tokens(tokens)
             .extraData(step.getExtraData())
             .envVars(envVars).stepName(STEP.APPROVE.name()).ts(System.currentTimeMillis())
-            .approveId(stepId)
+            .id(stepId)
             .submitter(step.getSubmitter())
             .submitterParameter(step.getSubmitterParameter())
             // TODO - Not Serializable, need to investigate on why.

@@ -42,15 +42,41 @@ module.exports = (robot) ->
   robot.router.post '/hubot/notify/:room', (req, res) ->
     room = req.params.room
 
+    # Actual message.
     message = req.body.message
+    # Status STARTED/ABORTED/SUCCESS/FAILURE/NOT_BUILT/BACK_TO_NORMAL/UNSTABLE for build notifications
+    # And for pipeline steps what ever user sends, by default to SUCCESS.
     status = req.body.status
+    # extraData is empty for build notifications, but what ever user sends for pipelines.
     extraData = req.body.extraData
-    userName = req.body.userName
-    buildCause = req.body.buildCause
+    # User Id, null for anonymous.
     userId = req.body.userId
+    # User Name
+    userName = req.body.userName
+    # Defaults to User Name for the builds kicked off by users for others actual build cause. Example TimerTrigger, SCMChange and so on.
+    buildCause = req.body.buildCause
+    # BUILD - For Build notifications.
+    # SEND - hubotSend
+    # APPROVE - hubotApprove
+    # TEST - For hubot site test notifications.
     stepName = req.body.stepName
+
+    # Except test notifications, this list of envrionment variable available for the current build.
     envVars = req.body.envVars
+
+    # Current time in milliseconds.
     ts = req.body.ts / 1000
+
+    # hubotApprove step vars
+    # input id
+    id = req.body.id
+    # submitter
+    submitter = req.body.submitter
+    submitterParameter = req.body.submitterParameter
+    ok = req.body.ok
+    # TODO Yet to add this server side.
+    # parameters = req.body.parameters
+
 
     # Validate Site for both folder level and global site level.
     if stepName == 'TEST'

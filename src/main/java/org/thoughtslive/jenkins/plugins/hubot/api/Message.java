@@ -61,8 +61,8 @@ public class Message implements Serializable {
   private long ts;
 
   // Approve step related params.
-  @JsonProperty("approveId")
-  private String approveId;
+  @JsonProperty("id")
+  private String id;
 
   @JsonProperty("submitter")
   private String submitter;
