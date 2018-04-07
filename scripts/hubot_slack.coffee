@@ -105,4 +105,3 @@ module.exports = (robot) ->
 
     robot.adapter.client.web.chat.postMessage(room, "", {as_user: true, unfurl_links: true, attachments: attachments })
     res.end()
-g
