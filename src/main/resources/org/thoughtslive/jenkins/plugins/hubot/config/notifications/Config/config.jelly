@@ -1,0 +1,22 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <tr>
+    <td style="width: 10%">
+      <f:checkbox field="notifyEnabled" />
+    </td>
+    <td style="width: 15%">
+      <f:enum field="notificationType">
+        ${it.getStatus()}
+      </f:enum>
+    </td>
+    <td style="width: 15%">
+      <f:textbox field="roomNames" />
+    </td>
+    <td style="width: 55%">
+      <f:textbox field="tokens" />
+    </td>
+    <td style="width: 5%">
+      <f:repeatableDeleteButton />
+    </td>
+  </tr>
+</j:jelly>

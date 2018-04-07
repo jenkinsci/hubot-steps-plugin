@@ -2,15 +2,18 @@ package org.thoughtslive.jenkins.plugins.hubot.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import hudson.AbortException;
+import hudson.EnvVars;
+import hudson.model.Run;
+import hudson.model.TaskListener;
 import java.io.IOException;
 import java.io.PrintStream;
-
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,16 +25,10 @@ import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData.ResponseDataBuilder;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
 
-import hudson.AbortException;
-import hudson.EnvVars;
-import hudson.model.Run;
-import hudson.model.TaskListener;
-
 /**
  * Unit test cases for SendStep class.
- * 
- * @author Naresh Rayapati
  *
+ * @author Naresh Rayapati
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ApproveStepTest.class})
@@ -59,7 +56,7 @@ public class ApproveStepTest {
     doNothing().when(printStreamMock).println();
 
     final ResponseDataBuilder<Void> builder = ResponseData.builder();
-    when(hubotServiceMock.sendMessage(anyString(), anyString()))
+    when(hubotServiceMock.sendMessage(any()))
         .thenReturn(builder.successful(true).code(200).message("Success").build());
 
     when(envVarsMock.get("HUBOT_URL")).thenReturn("http://localhost:9090/");
@@ -68,12 +65,12 @@ public class ApproveStepTest {
     when(contextMock.get(Run.class)).thenReturn(runMock);
     when(contextMock.get(TaskListener.class)).thenReturn(taskListenerMock);
     when(contextMock.get(EnvVars.class)).thenReturn(envVarsMock);
-
   }
 
   @Test
   public void testWithEmptyHubotURLThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "message");
+    final ApproveStep step = new ApproveStep("message");
+    step.setRoom("room");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -83,26 +80,30 @@ public class ApproveStepTest {
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.start();
-    }).withMessage("Hubot: HUBOT_URL is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_URL or step parameter equivalent is empty or null.")
+        .withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
   @Test
   public void testWithEmptyRoomThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("", "message");
+    final ApproveStep step = new ApproveStep("message");
+    step.setUrl("http://localhost:9090/");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
     // Execute and assert Test.
     assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
       stepExecution.start();
-    }).withMessage("Hubot: Room is empty or null.").withStackTraceContaining("AbortException")
+    }).withMessage("Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.")
+        .withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
   @Test
   public void testWithEmptyMessageThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "");
+    final ApproveStep step = new ApproveStep("");
+    step.setRoom("");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -115,12 +116,13 @@ public class ApproveStepTest {
 
   @Test
   public void testErrorMessageSend() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "message");
+    final ApproveStep step = new ApproveStep("message");
+    step.setRoom("room");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
     final ResponseDataBuilder<Void> builder = ResponseData.builder();
-    when(hubotServiceMock.sendMessage(anyString(), anyString()))
+    when(hubotServiceMock.sendMessage(any()))
         .thenReturn(builder.successful(false).code(400).error("fake error.").build());
 
     // Assert Test
@@ -131,8 +133,8 @@ public class ApproveStepTest {
 
   @Test
   public void testFailOnErrorFalseDoesNotThrowsAbortException() throws Exception {
-    final ApproveStep step = new ApproveStep("", "");
-    step.setFailOnError(false);
+    final ApproveStep step = new ApproveStep("message");
+    step.setFailOnError("false");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -145,7 +147,8 @@ public class ApproveStepTest {
 
   @Test
   public void testSuccessfulMessageSend() throws Exception {
-    final ApproveStep step = new ApproveStep("room", "message");
+    final ApproveStep step = new ApproveStep("message");
+    step.setRoom("room");
     stepExecution = new ApproveStep.ApproveStepExecution(step, contextMock);
     stepExecution.setHubotService(hubotServiceMock);
 
@@ -156,10 +159,7 @@ public class ApproveStepTest {
         .withStackTraceContaining("AbortException").withNoCause();
 
     // Assert Test
-    verify(hubotServiceMock, times(1)).sendMessage("room",
-        "message\n\tto Proceed reply:  .j proceed /hubot-testing/job/01"
-            + "\n\tto Abort reply  :  .j abort /hubot-testing/job/01\n\n"
-            + "Job: http://localhost:9090/hubot-testing/job/01\n" + "User: anonymous");
-    assertThat(step.isFailOnError()).isEqualTo(true);
+    verify(hubotServiceMock, times(1)).sendMessage(any());
+    assertThat(step.getFailOnError()).isEqualTo(null);
   }
 }

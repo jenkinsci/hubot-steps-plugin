@@ -8,8 +8,9 @@ public class MessageTest {
 
   @Test
   public void testToString() throws Exception {
-    final Message author = new Message("testMessage");
+    final Message message = Message.builder().message("actualMessage").build();
 
-    assertThat(author.toString()).isEqualTo("Message(message=testMessage)");
+    assertThat(message.toString()).isEqualTo(
+        "Message(message=actualMessage, status=null, extraData=null, userName=null, buildCause=null, userId=null, stepName=null, envVars=null, tokens=null, ts=0, id=null, submitter=null, submitterParameter=null, ok=null, parameters=null)");
   }
 }
