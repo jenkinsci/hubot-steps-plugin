@@ -78,7 +78,7 @@ hubotSend message: 'Releasing Test project.'
 * *site* `optional`, hubot site name either it is from Folder Level or Global Level, Only used when *url*, *room* and *failOnError* are not present. Optional, it will fallback to first default site that it found while searching from immediate folder to Global site configurations.
 * *url* `optional`, if it is provided as global environment variable *HUBOT_URL* or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 * *room* `optional`, if it is provided as global environment variable *HUBOT_DEFAULT_ROOM* or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
-* *failOnError* `optional` and by default it is `true`, if any error it won't abort the job., it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.
+* *failOnError* `optional` and by default it is `true`, if any error it won't abort the job, it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.
 
 === **hubotApprove**
 
@@ -96,7 +96,7 @@ hubotApprove message: 'Promote to Production?'
 * *site* `optional`, hubot site name either it is from Folder Level or Global Level, Only used when *url*, *room* and *failOnError* are not present. Optional, it will fallback to first default site that it found while searching from immediate folder to Global site configurations.
 * *url* `optional`, if it is provided as global environment variable *HUBOT_URL* or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 * *room* `optional`, if it is provided as global environment variable *HUBOT_DEFAULT_ROOM* or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
-* *failOnError* `optional` and by default it is `true`, if any error it won't abort the job., it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.
+* *failOnError* `optional` and by default it is `true`, if any error it won't abort the job, it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.
 * *id* `optional`, defaults to *Proceed*, refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
 * *submitter* `optional`, comma separated list of users who can provide input. Refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
 * *ok* `optional`, Proceed button label, Refer to https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[input step] for more information.
