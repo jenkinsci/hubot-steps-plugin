@@ -30,7 +30,7 @@ module.exports = (robot) ->
           console.log "Could not create logs directory: #{error}"
   startLogging = ->
     console.log "Started ChatOps HTTP Script logging"
-    robot.hear //, (msg) ->
+    robot.hear // (msg) ->
       fs.appendFile logFileName(msg), formatMessage(msg), (error) ->
         console.log "Could not log message: #{error}" if error
   logFileName = (msg) ->

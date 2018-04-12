@@ -7,7 +7,7 @@
     <version>2.23</version>
   </parent>
   <artifactId>hubot-steps</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>2.0.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Hubot Pipeline Steps</name>
   <description>Hubot Pipeline Steps</description>
@@ -185,6 +185,13 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
               <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.jenkins-ci.tools</groupId>
+            <artifactId>maven-hpi-plugin</artifactId>
+            <configuration>
+              <compatibleSinceVersion>2.0.0</compatibleSinceVersion>
             </configuration>
           </plugin>
         </plugins>
