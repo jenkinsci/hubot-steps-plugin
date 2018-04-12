@@ -142,7 +142,7 @@ TIP: Please replace scripts on hubot-base repo with the scripts under this hubot
 
 === Already running hubot.
 
-Then just copy over following scripts from `scripts` folder. These are just examples and can be modified based on chat service / per the actual needs.
+Then just copy over following scripts from `scripts` folder (jenkins, and one of the hubot scripts based on chat service you are using.). These are just examples and can be modified based on chat service / per the actual needs.
 
 * https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot_slack.coffee[hubot_slack]
 * https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot.coffee[hubot]
@@ -207,7 +207,7 @@ image::images/blueocean.png[BlueOcean,900]
 
 == Known Issues
 
-* https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot.coffee[hubot] script doesn't work when *Prevent Cross Site Request Forgery exploits* enabled in Configure Global Security.
+* https://github.com/jenkinsci/hubot-steps/blob/master/scripts/hubot.coffee[hubot] script doesn't work when *Prevent Cross Site Request Forgery exploits* enabled in Configure Global Security, need to modify script to query crumb before actual request.
 
 == Maintainers
 

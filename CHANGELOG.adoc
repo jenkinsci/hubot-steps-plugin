@@ -1,6 +1,8 @@
 = Release Notes.
 
-== 2.0.0 (Unreleased)
+== 2.0.1 (Unreleased)
+
+== 2.0.0
 
 * https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50608] - Global site configuration to support multiple hubot servers.
 * https://issues.jenkins-ci.org/browse/JENKINS-50609[JENKINS-50609] - Folder Level site configuration.
