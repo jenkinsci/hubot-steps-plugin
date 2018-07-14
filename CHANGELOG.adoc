@@ -1,6 +1,8 @@
 = Release Notes.
 
-== 2.0.1 (Unreleased)
+== 2.0.2
+
+== 2.0.1
 
 * https://issues.jenkins-ci.org/browse/JENKINS-52432[JENKINS-52432] - Pipeline's timeout takes twice the timeout to terminate HubotApprove.
 
