@@ -223,6 +223,7 @@ public class ApproveStep extends BasicHubotStep {
       if (inputExecution != null) {
         inputExecution.stop(cause);
       }
+      getContext().onFailure(cause);
     }
   }
 }
