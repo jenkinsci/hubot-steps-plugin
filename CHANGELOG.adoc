@@ -2,6 +2,8 @@
 
 == 2.0.1 (Unreleased)
 
+* https://issues.jenkins-ci.org/browse/JENKINS-52432[JENKINS-52432] - Pipeline's timeout takes twice the timeout to terminate HubotApprove.
+
 == 2.0.0
 
 * https://issues.jenkins-ci.org/browse/JENKINS-50608[JENKINS-50608] - Global site configuration to support multiple hubot servers.
