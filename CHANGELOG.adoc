@@ -1,6 +1,10 @@
 = Release Notes.
 
+== 2.0.3 (Unreleased)
+
 == 2.0.2
+
+* https://issues.jenkins-ci.org/browse/JENKINS-52567[JENKINS-52567] - Whitelist ResponseData methods in In-Process approval.
 
 == 2.0.1
 
