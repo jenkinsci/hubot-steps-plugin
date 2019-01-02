@@ -75,7 +75,7 @@ hubotSend message: 'Releasing Test project.'
 * *status* `optional`, text which can be used in script to differentiate. Ex: INFO, WARN, ERROR or SUCCESS - So that in Slack it can be used to decide card colors.
 * *tokens* `optional`, list of tokens, comma separated, Refer to https://wiki.jenkins.io/display/JENKINS/Token+Macro+Plugin[Token Macro plugin] for more information.
 * *extraData* `optional`, extra data like attachments in case of slack, Any kind of Map, given it is Serializable.
-* *site* `optional`, hubot site name either it is from Folder Level or Global Level, Only used when *url*, *room* and *failOnError* are not present. Optional, it will fallback to first default site that it found while searching from immediate folder to Global site configurations.
+* *site* `optional`, hubot site name either it is from Folder Level or Global Level, Only used when *url* is not present. Optional, it will fallback to first default site that it found while searching from immediate folder to Global site configurations.
 * *url* `optional`, if it is provided as global environment variable *HUBOT_URL* or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 * *room* `optional`, if it is provided as global environment variable *HUBOT_DEFAULT_ROOM* or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
 * *failOnError* `optional` and by default it is `true`, if any error it won't abort the job, it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.
@@ -93,7 +93,7 @@ hubotApprove message: 'Promote to Production?'
 * *status* `optional`, text which can be used in script to differentiate. Ex: INFO, WARN, ERROR or SUCCESS - So that in Slack it can be used to decide card colors.
 * *tokens* `optional`, list of tokens, comma separated, Refer to https://wiki.jenkins.io/display/JENKINS/Token+Macro+Plugin[Token Macro plugin] for more information.
 * *extraData* `optional`, extra data like attachments in case of slack, Any kind of Map, given it is Serializable.
-* *site* `optional`, hubot site name either it is from Folder Level or Global Level, Only used when *url*, *room* and *failOnError* are not present. Optional, it will fallback to first default site that it found while searching from immediate folder to Global site configurations.
+* *site* `optional`, hubot site name either it is from Folder Level or Global Level, Only used when *url* is not present. Optional, it will fallback to first default site that it found while searching from immediate folder to Global site configurations.
 * *url* `optional`, if it is provided as global environment variable *HUBOT_URL* or provided by `withEnv` step, this should always end with `/`, environment variable takes the lower precedence.
 * *room* `optional`, if it is provided as global environment variable *HUBOT_DEFAULT_ROOM* or provided by `withEnv` step, and room doesn't require `#`, it is added in the code, environment variable takes the lower precedence.
 * *failOnError* `optional` and by default it is `true`, if any error it won't abort the job, it can also be provided as global environment variable *HUBOT_FAIL_ON_ERROR*, environment variable takes the lower precedence.

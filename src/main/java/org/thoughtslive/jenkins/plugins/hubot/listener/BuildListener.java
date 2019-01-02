@@ -28,17 +28,19 @@ public class BuildListener extends RunListener<Run<?, ?>> {
   @SuppressFBWarnings
   public void onCompleted(Run<?, ?> run, TaskListener listener) {
     HubotSite site = HubotSite.get(run.getParent(), listener);
-    Type type = Type.fromResults(run.getPreviousBuild().getResult(), run.getResult());
-    if (site != null && site.getNotifications() != null) {
-      for (Config config : site.getNotifications()) {
-        if (config.isNotifyEnabled()) {
-          if (config.getNotificationType().equals(type)) {
-            if (Util.fixEmpty(config.getRoomNames()) != null) {
-              for (String roomName : config.getRoomNames().split(",")) {
-                sendMessage(run, listener, type, site, roomName.trim(), config);
+    if(run.getPreviousBuild() != null) {
+      Type type = Type.fromResults(run.getPreviousBuild().getResult(), run.getResult());
+      if (site != null && site.getNotifications() != null) {
+        for (Config config : site.getNotifications()) {
+          if (config.isNotifyEnabled()) {
+            if (config.getNotificationType().equals(type)) {
+              if (Util.fixEmpty(config.getRoomNames()) != null) {
+                for (String roomName : config.getRoomNames().split(",")) {
+                  sendMessage(run, listener, type, site, roomName.trim(), config);
+                }
+              } else {
+                sendMessage(run, listener, type, site, null, config);
               }
-            } else {
-              sendMessage(run, listener, type, site, null, config);
             }
           }
         }

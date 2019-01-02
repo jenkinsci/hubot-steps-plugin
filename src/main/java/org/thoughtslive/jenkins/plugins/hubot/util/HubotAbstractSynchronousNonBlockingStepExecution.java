@@ -73,7 +73,7 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
     url = Util.fixEmpty(step.getUrl());
     failOnErrorStr = Util.fixEmpty(step.getFailOnError());
 
-    if (room == null && url == null && failOnErrorStr == null) {
+    if (url == null) {
       site = HubotSite.get(run.getParent(), listener, step.getSite());
     }
 
@@ -87,9 +87,6 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
       if (failOnErrorStr == null) {
         failOnErrorStr = envVars.get("HUBOT_FAIL_ON_ERROR");
       }
-    }
-
-    if (site == null) {
       if (Util.fixEmpty(url) == null) {
         errorMessage = "Hubot: HUBOT_URL or step parameter equivalent is empty or null.";
       } else {
@@ -110,6 +107,12 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
         }
       }
     } else {
+      if(room != null) {
+        site.setRoom(room);
+      }
+      if(failOnErrorStr != null) {
+        site.setFailOnError(Boolean.parseBoolean(failOnErrorStr));
+      }
       if (Util.fixEmpty(site.getUrl().toString()) == null) {
         errorMessage = "Hubot: url is empty or null on site: " + site.getName();
       }
