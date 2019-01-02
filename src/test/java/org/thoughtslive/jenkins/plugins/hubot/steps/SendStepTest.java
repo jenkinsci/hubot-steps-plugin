@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import hudson.AbortException;
 import hudson.EnvVars;
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class SendStepTest {
   @Mock
   TaskListener taskListenerMock;
   @Mock
-  Run<?, ?> runMock;
+  Run runMock;
   @Mock
   EnvVars envVarsMock;
   @Mock
@@ -46,6 +47,8 @@ public class SendStepTest {
   HubotService hubotServiceMock;
   @Mock
   StepContext contextMock;
+  @Mock
+  Job jobMock;
 
   SendStep.SendStepExecution stepExecution;
 
@@ -53,6 +56,7 @@ public class SendStepTest {
   public void setup() throws IOException, InterruptedException {
 
     when(runMock.getCauses()).thenReturn(null);
+    when(runMock.getParent()).thenReturn(jobMock);
     when(taskListenerMock.getLogger()).thenReturn(printStreamMock);
     doNothing().when(printStreamMock).println();
 
