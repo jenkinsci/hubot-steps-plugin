@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+<j:jelly xmlns:f="/lib/form" xmlns:j="jelly:core">
   <f:entry field="message" title="Message">
     <f:expandableTextbox/>
   </f:entry>
   <f:entry field="site" title="Site Name">
-    <f:select />
+    <f:select/>
   </f:entry>
   <f:entry field="status" title="Status">
     <f:textbox/>
@@ -17,7 +17,7 @@
     <f:entry field="room" title="Room">
       <f:textbox/>
     </f:entry>
-    <f:entry title="Fail On Error" field="failOnError">
+    <f:entry field="failOnError" title="Fail On Error">
       <f:textbox/>
     </f:entry>
     <f:entry field="extraData" title="Anything Additional Data">
@@ -40,5 +40,6 @@
     </f:entry>
     <f:entry field="parameters" title="Parameters">
       <f:repeatableHeteroProperty field="parameters"/>
-    </f:entry>  </f:advanced>
+    </f:entry>
+  </f:advanced>
 </j:jelly>

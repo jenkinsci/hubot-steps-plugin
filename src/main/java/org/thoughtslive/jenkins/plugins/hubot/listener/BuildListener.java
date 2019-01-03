@@ -28,7 +28,7 @@ public class BuildListener extends RunListener<Run<?, ?>> {
   @SuppressFBWarnings
   public void onCompleted(Run<?, ?> run, TaskListener listener) {
     HubotSite site = HubotSite.get(run.getParent(), listener);
-    if(run.getPreviousBuild() != null) {
+    if (run.getPreviousBuild() != null) {
       Type type = Type.fromResults(run.getPreviousBuild().getResult(), run.getResult());
       if (site != null && site.getNotifications() != null) {
         for (Config config : site.getNotifications()) {

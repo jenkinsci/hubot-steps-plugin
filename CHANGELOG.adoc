@@ -2,6 +2,10 @@
 
 == 2.0.3 (Unreleased)
 
+* https://issues.jenkins-ci.org/browse/JENKINS-54197[JENKINS-54197] - Allow combining room and failOnError fields along with site.
+* Upgrade retrofit2 dependency to fix the security warning.
+* Apply Google Style formatting. 
+
 == 2.0.2
 
 * https://issues.jenkins-ci.org/browse/JENKINS-52567[JENKINS-52567] - Whitelist ResponseData methods in In-Process approval.

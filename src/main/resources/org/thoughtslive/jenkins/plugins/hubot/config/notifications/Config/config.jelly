@@ -1,8 +1,8 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+<j:jelly xmlns:f="/lib/form" xmlns:j="jelly:core">
   <tr>
     <td style="width: 10%">
-      <f:checkbox field="notifyEnabled" />
+      <f:checkbox field="notifyEnabled"/>
     </td>
     <td style="width: 15%">
       <f:enum field="notificationType">
@@ -10,13 +10,13 @@
       </f:enum>
     </td>
     <td style="width: 15%">
-      <f:textbox field="roomNames" />
+      <f:textbox field="roomNames"/>
     </td>
     <td style="width: 55%">
-      <f:textbox field="tokens" />
+      <f:textbox field="tokens"/>
     </td>
     <td style="width: 5%">
-      <f:repeatableDeleteButton />
+      <f:repeatableDeleteButton/>
     </td>
   </tr>
 </j:jelly>

@@ -1,11 +1,11 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+<j:jelly xmlns:f="/lib/form" xmlns:j="jelly:core">
   <f:section title="Hubot">
-    <f:entry title="Enable Notifications" field="enableNotifications">
+    <f:entry field="enableNotifications" title="Enable Notifications">
       <f:checkbox/>
     </f:entry>
-    <f:entry title="Site Name" field="siteNames">
-      <f:select />
+    <f:entry field="siteNames" title="Site Name">
+      <f:select/>
     </f:entry>
   </f:section>
 </j:jelly>

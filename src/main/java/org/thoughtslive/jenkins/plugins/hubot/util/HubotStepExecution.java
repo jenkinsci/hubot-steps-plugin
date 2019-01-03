@@ -105,10 +105,10 @@ public abstract class HubotStepExecution<T> extends StepExecution {
         }
       }
     } else {
-      if(room != null) {
+      if (room != null) {
         site.setRoom(room);
       }
-      if(failOnErrorStr != null) {
+      if (failOnErrorStr != null) {
         site.setFailOnError(Boolean.parseBoolean(failOnErrorStr));
       }
       if (Util.fixEmpty(site.getUrl().toString()) == null) {

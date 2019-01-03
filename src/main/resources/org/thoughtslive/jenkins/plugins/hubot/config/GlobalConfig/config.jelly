@@ -1,8 +1,8 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+<j:jelly xmlns:f="/lib/form" xmlns:j="jelly:core">
   <f:section title="Hubot Steps">
-    <f:entry title="Sites" description="">
-      <f:repeatableProperty field="sites" add="Add Hubot Site"/>
+    <f:entry description="" title="Sites">
+      <f:repeatableProperty add="Add Hubot Site" field="sites"/>
     </f:entry>
   </f:section>
 </j:jelly>
