@@ -1,10 +1,13 @@
 = Release Notes.
 
-== 2.0.3 (Unreleased)
+== 2.0.4 (Unreleased)
+
+
+== 2.0.3
 
 * https://issues.jenkins-ci.org/browse/JENKINS-54197[JENKINS-54197] - Allow combining room and failOnError fields along with site.
 * Upgrade retrofit2 dependency to fix the security warning.
-* Apply Google Style formatting. 
+* Apply Google Style formatting.
 
 == 2.0.2
 
