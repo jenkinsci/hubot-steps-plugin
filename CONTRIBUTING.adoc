@@ -21,12 +21,12 @@ Before you contribute, please review these guidelines to help ensure a smooth pr
 
 == Pull requests
 
-* Read {2}[how to properly contribute to open source projects on Github].
+* Read {2}[how to properly contribute to open source projects on GitHub].
 * Fork the project.
 * Use a feature branch.
 * Write {3}[good commit messages].
 * Use the same coding conventions as the rest of the project. This project is using Google https://google.github.io/styleguide/javaguide.html[StyleGuide]
-** Download StyleGuides from https://github.com/google/styleguide[Github].
+** Download StyleGuides from https://github.com/google/styleguide[GitHub].
 * Commit locally and push to your fork until you are happy with your contribution.
 * Make sure to add tests and verify all the tests are passing when merging upstream.
 * Add an entry to the link:{4}[Changelog] accordingly.
