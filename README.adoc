@@ -109,7 +109,7 @@ hubotApprove message: 'Promote to Production?'
 ----
 hubotSend message: "*Release Started*. \n Releasing Test Project. :sunny: \n<!here> <!channel> <@nrayapati> ", tokens: "BUILD_NUMBER,BUILD_ID", status: 'STARTED'
 
-hubotSend message: "*Release Completed*. \n Releaseing Test Project.", tokens: "BUILD_NUMBER,BUILD_ID", status: 'SUCCESS'
+hubotSend message: "*Release Completed*. \n Releasing Test Project.", tokens: "BUILD_NUMBER,BUILD_ID", status: 'SUCCESS'
 
 hubotApprove message: 'Promote to Staging?', tokens: "BUILD_NUMBER, BUILD_DURATION", status: 'ABORTED'
 
