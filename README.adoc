@@ -36,7 +36,7 @@ image::images/globalSite.png[Global Site,900]
 === **Folder Config**
 * List of Hubot Sites
 
-image::images/folderSite.png[Floder Site,900]
+image::images/folderSite.png[Folder Site,900]
 
 === **Job Config**
 * *Enable Notifications* - defaults to `false`.
