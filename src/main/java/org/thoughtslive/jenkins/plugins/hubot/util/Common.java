@@ -194,7 +194,7 @@ public class Common {
   }
 
   /**
-   * Exapands given macro, see Token Marco plugin.
+   * Expands given macro, see Token Marco plugin.
    */
   @SuppressFBWarnings
   public static Map expandMacros(String tokens, Run<?, ?> run, FilePath ws, TaskListener listener) {
