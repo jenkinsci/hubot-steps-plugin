@@ -59,7 +59,7 @@ public class Common {
   }
 
   /**
-   * Returns build number from the given Environemnt Vars.
+   * Returns build number from the given Environment Vars.
    *
    * @param logger {@link PrintStream}
    * @param envVars {@link EnvVars}

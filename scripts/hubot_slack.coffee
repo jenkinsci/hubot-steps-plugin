@@ -61,7 +61,7 @@ module.exports = (robot) ->
     # TEST - For hubot site test notifications.
     stepName = req.body.stepName
 
-    # Except test notifications, this list of envrionment variable available for the current build.
+    # Except test notifications, this list of environment variable available for the current build.
     envVars = req.body.envVars
 
     # Current time in milliseconds.
