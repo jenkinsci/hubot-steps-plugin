@@ -36,7 +36,7 @@ image::images/globalSite.png[Global Site,900]
 === **Folder Config**
 * List of Hubot Sites
 
-image::images/folderSite.png[Floder Site,900]
+image::images/folderSite.png[Folder Site,900]
 
 === **Job Config**
 * *Enable Notifications* - defaults to `false`.
@@ -109,7 +109,7 @@ hubotApprove message: 'Promote to Production?'
 ----
 hubotSend message: "*Release Started*. \n Releasing Test Project. :sunny: \n<!here> <!channel> <@nrayapati> ", tokens: "BUILD_NUMBER,BUILD_ID", status: 'STARTED'
 
-hubotSend message: "*Release Completed*. \n Releaseing Test Project.", tokens: "BUILD_NUMBER,BUILD_ID", status: 'SUCCESS'
+hubotSend message: "*Release Completed*. \n Releasing Test Project.", tokens: "BUILD_NUMBER,BUILD_ID", status: 'SUCCESS'
 
 hubotApprove message: 'Promote to Staging?', tokens: "BUILD_NUMBER, BUILD_DURATION", status: 'ABORTED'
 
@@ -216,6 +216,6 @@ image::images/blueocean.png[BlueOcean,900]
 == Disclaimer
 
 Please don't hesitate to log a https://issues.jenkins-ci.org/secure/RapidBoard.jspa?rapidView=171&projectKey=JENKINS[JIRA] or github pull request if you need any help or if you can be of help with this plugin :).
-Refer to the link:./CONTRIBUTION.adoc[contribution guide] for more inforamtion.
+Refer to the link:./CONTRIBUTION.adoc[contribution guide] for more information.
 
 Developed by https://github.com/nrayapati[Naresh Rayapati], this repo was initially cloned from https://github.com/ThoughtsLive/hubot-steps[ThoughtsLive]

@@ -226,10 +226,10 @@ jenkinsList = (msg) ->
     req = msg.http("#{url}/api/json")
 
     if !msg.match[2]
-        msg.reply "```Try with at least 3 charaters.```"
+        msg.reply "```Try with at least 3 characters.```"
     else
       if msg.match[2].length < 3 
-        msg.reply "```Try with at least 3 charaters.```"
+        msg.reply "```Try with at least 3 characters.```"
       else 
         if process.env.HUBOT_JENKINS_AUTH
           auth = new Buffer(process.env.HUBOT_JENKINS_AUTH).toString('base64')
