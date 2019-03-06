@@ -2,7 +2,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:f="/lib/form" xmlns:j="jelly:core" xmlns:st="jelly:stapler">
   <f:entry field="defaultSite">
-    <f:checkbox title="Default Site" default="false"/>
+    <f:checkbox default="false" title="Default Site"/>
   </f:entry>
   <f:entry field="name" title="Name">
     <f:textbox/>
@@ -14,14 +14,14 @@
     <f:textbox/>
   </f:entry>
   <f:entry field="useFolderName">
-    <f:checkbox title="Use Folder Name as Room" default="false"/>
+    <f:checkbox default="false" title="Use Folder Name as Room"/>
   </f:entry>
   <f:entry field="roomPrefix" title="Room Prefix">
     <f:textbox/>
   </f:entry>
   <f:advanced>
     <f:entry field="failOnError">
-      <f:checkbox title="Fail On Error" default="true"/>
+      <f:checkbox default="true" title="Fail On Error"/>
     </f:entry>
     <f:entry field="notifications" title="${%Notifications}">
       <table width="100%">

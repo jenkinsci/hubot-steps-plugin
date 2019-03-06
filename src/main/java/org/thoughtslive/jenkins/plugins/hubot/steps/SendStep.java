@@ -76,31 +76,33 @@ public class SendStep extends BasicHubotStep {
       String folderName = null;
 
       // Parent folder(s) sites.
-      ItemGroup parent = project.getParent();
-      while (parent != null) {
-        if (parent instanceof AbstractFolder) {
-          AbstractFolder folder = (AbstractFolder) parent;
-          if (folderName == null) {
-            folderName = folder.getName();
-          } else {
-            folderName = folder.getName() + " » " + folderName;
-          }
-          HubotFolderProperty jfp = (HubotFolderProperty) folder.getProperties()
-              .get(HubotFolderProperty.class);
-          if (jfp != null) {
-            HubotSite[] sites = jfp.getSites();
-            if (sites != null && sites.length > 0) {
-              for (HubotSite site : sites) {
-                hubotSites.add(new Option(folderName + " - " + site.getName(), site.getName()));
+      if (project != null) {
+        ItemGroup parent = project.getParent();
+        while (parent != null) {
+          if (parent instanceof AbstractFolder) {
+            AbstractFolder folder = (AbstractFolder) parent;
+            if (folderName == null) {
+              folderName = folder.getName();
+            } else {
+              folderName = folder.getName() + " » " + folderName;
+            }
+            HubotFolderProperty jfp = (HubotFolderProperty) folder.getProperties()
+                .get(HubotFolderProperty.class);
+            if (jfp != null) {
+              HubotSite[] sites = jfp.getSites();
+              if (sites != null && sites.length > 0) {
+                for (HubotSite site : sites) {
+                  hubotSites.add(new Option(folderName + " - " + site.getName(), site.getName()));
+                }
               }
             }
           }
-        }
 
-        if (parent instanceof Item) {
-          parent = ((Item) parent).getParent();
-        } else {
-          parent = null;
+          if (parent instanceof Item) {
+            parent = ((Item) parent).getParent();
+          } else {
+            parent = null;
+          }
         }
       }
 

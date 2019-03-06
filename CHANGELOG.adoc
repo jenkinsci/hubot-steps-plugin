@@ -2,6 +2,7 @@
 
 == 2.0.4 (Unreleased)
 
+* https://issues.jenkins-ci.org/browse/JENKINS-56366[JENKINS-56366] - Global level pipeline syntax throwing exception for both hubotApprove / hubotSend.
 
 == 2.0.3
 
@@ -32,7 +33,7 @@
 * [big red]#Few breaking changes.#
 ** `failOnError` - Changed type from `boolean` to `String`
 ** `failOnError` - Global environment variable `HUBOT_FAIL_ON_ERROR` takes lower precedence for `hubotSend` and `hubotApprove`.
-** `hubotSend`, `hubotApprove` - The message not being appended with `BUILD_URL` and `User Name` anymore, instead these variable being sent through JSON, so scripts can have these some massaging.
+** `hubotSend`, `hubotApprove` - The message not being appended with `BUILD_URL` and `User Name` anymore, instead these variable being sent through JSON, so scripts can have some massaging.
 *** Not just these variables but lot more being sent through POST call to hubot, refer to `*hubot_slack.coffee*` in scripts folder for sample example and notes.
 
 == 1.1.0
