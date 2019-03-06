@@ -6,6 +6,8 @@
 == 2.0.4
 
 * https://issues.jenkins-ci.org/browse/JENKINS-56366[JENKINS-56366] - Global level pipeline syntax throwing exception for both hubotApprove / hubotSend.
+* https://issues.jenkins-ci.org/browse/JENKINS-55787[JENKINS-55787] - Switch labels from entry to checkbox.
+* Few spelling corrections using https://github.com/jsoref/spelling. Thank you https://github.com/jsoref.
 
 == 2.0.3
 
