@@ -1,6 +1,9 @@
 = Release Notes.
 
-== 2.0.4 (Unreleased)
+== 2.0.5 (Unreleased)
+
+
+== 2.0.4
 
 * https://issues.jenkins-ci.org/browse/JENKINS-56366[JENKINS-56366] - Global level pipeline syntax throwing exception for both hubotApprove / hubotSend.
 
