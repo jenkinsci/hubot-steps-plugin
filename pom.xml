@@ -26,6 +26,7 @@
     <powermock.version>1.6.3</powermock.version>
     <assertj-core.version>3.6.1</assertj-core.version>
     <assertj-assertions-generator-maven-plugin.version>2.0.0</assertj-assertions-generator-maven-plugin.version>
+    <commons-beanutils.version>1.9.3</commons-beanutils.version>
   </properties>
   <organization>
     <name>ThoughtsLive</name>
@@ -127,6 +128,11 @@
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-joda</artifactId>
       <version>${jackson2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>${commons-beanutils.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->
