@@ -2,6 +2,7 @@ package org.thoughtslive.jenkins.plugins.hubot.steps;
 
 import com.cloudbees.hudson.plugins.folder.AbstractFolder;
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.Gson;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -176,6 +177,7 @@ public class ApproveStep extends BasicHubotStep {
         final Map tokens = Common.expandMacros(step.getTokens(), run, ws, listener);
         final String stepId = Util.fixEmpty(step.getId()) == null ? "Proceed" : step.getId().trim();
 
+        Gson gson = new Gson();
         final Message message = Message.builder().message(step.getMessage()).userName(buildUserName)
             .userId(buildUserId)
             .buildCause(buildCause)
@@ -186,8 +188,7 @@ public class ApproveStep extends BasicHubotStep {
             .id(stepId)
             .submitter(step.getSubmitter())
             .submitterParameter(step.getSubmitterParameter())
-            // TODO - Not Serializable, need to investigate on why.
-            //.parameters(step.getParameters())
+            .parameters(gson.toJson(step.getParameters()))
             .ok(step.getOk())
             .build();
 
