@@ -1,7 +1,10 @@
 = Release Notes.
 
-== 2.0.5 (Unreleased)
+== 2.0.6 (Unreleased)
 
+== 2.0.5
+
+* https://issues.jenkins-ci.org/browse/JENKINS-57016[JENKINS-57016] - Support sending parameters to hubot.
 
 == 2.0.4
 
