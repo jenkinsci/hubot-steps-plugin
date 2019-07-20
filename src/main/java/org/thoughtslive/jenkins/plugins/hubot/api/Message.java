@@ -71,6 +71,6 @@ public class Message implements Serializable {
   private String ok;
 
   @JsonProperty("parameters")
-  private List<ParameterDefinition> parameters;
+  private String parameters;
 
 }
