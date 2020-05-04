@@ -1,5 +1,4 @@
 = Hubot Pipeline Steps
-
 :toc: macro
 :note-caption: :information_source:
 :tip-caption: :bulb:
