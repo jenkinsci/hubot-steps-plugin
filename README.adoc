@@ -5,7 +5,7 @@
 
 image:images/JenkinsPlusHubot.png[Jenkins,300]
 
-link:https://ci.jenkins.io/job/Plugins/job/hubot-steps-plugin/job/master/[image:https://ci.jenkins.io/job/Plugins/job/hubot-steps-plugin/job/master/badge/icon[Build]] image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[License] link:https://plugins.jenkins.io/hubot-steps[image:https://img.shields.io/badge/Hubot%20Plugin-WIKI-blue.svg[Wiki]]
+link:https://ci.jenkins.io/job/Plugins/job/hubot-steps-plugin/job/master/[image:https://ci.jenkins.io/job/Plugins/job/hubot-steps-plugin/job/master/badge/icon[Build]] image:https://img.shields.io/badge/License-Apache%202.0-blue.svg[License] link:https://plugins.jenkins.io/hubot-steps[image:https://img.shields.io/badge/Hubot%20Plugin-WIKI-blue.svg[Wiki]] image:https://badges.gitter.im/jenkinsci/hubot-steps-plugin.svg[link="https://gitter.im/jenkinsci/hubot-steps-plugin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
 
 Jenkins Pipeline Steps for integration with the https://hubot.github.com/[Hubot Chat Bot] and with human approval.
 
