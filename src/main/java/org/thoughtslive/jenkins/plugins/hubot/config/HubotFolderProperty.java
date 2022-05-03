@@ -5,7 +5,7 @@ import com.cloudbees.hudson.plugins.folder.AbstractFolderProperty;
 import com.cloudbees.hudson.plugins.folder.AbstractFolderPropertyDescriptor;
 import hudson.Extension;
 import hudson.util.CopyOnWriteList;
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import lombok.Getter;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -64,7 +64,7 @@ public class HubotFolderProperty extends AbstractFolderProperty<AbstractFolder<?
   @Extension
   public static class DescriptorImpl extends AbstractFolderPropertyDescriptor {
 
-    @Nonnull
+    @NonNull
     @Override
     public String getDisplayName() {
       return "Hubot Folder Property";
