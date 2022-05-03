@@ -8,7 +8,7 @@
     <version>4.40</version>
   </parent>
   <artifactId>hubot-steps</artifactId>
-  <version>${changelist}</version>
+  <version>${revision}.${changelist}</version>
   <packaging>hpi</packaging>
   <name>Hubot Pipeline Steps</name>
   <inceptionYear>2016</inceptionYear>
@@ -21,6 +21,7 @@
     </license>
   </licenses>
   <properties>
+    <revision>2.1</revision>
     <changelist>999999-SNAPSHOT</changelist>
     <java.level>11</java.level>
     <jenkins.version>2.332.2</jenkins.version>
