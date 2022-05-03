@@ -7,7 +7,6 @@
     <artifactId>plugin</artifactId>
     <version>4.40</version>
   </parent>
-  <groupId>org.jenkins.plugins</groupId>
   <artifactId>hubot-steps</artifactId>
   <version>${changelist}</version>
   <packaging>hpi</packaging>
