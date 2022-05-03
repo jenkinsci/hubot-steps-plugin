@@ -2,7 +2,7 @@ package org.thoughtslive.jenkins.plugins.hubot.steps;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -17,11 +17,11 @@ import java.io.IOException;
 import java.io.PrintStream;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockitoAnnotations;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData.ResponseDataBuilder;
 import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
@@ -31,8 +31,6 @@ import org.thoughtslive.jenkins.plugins.hubot.service.HubotService;
  *
  * @author Naresh Rayapati
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ApproveStepTest.class})
 public class ApproveStepTest {
 
   @Mock
@@ -51,9 +49,11 @@ public class ApproveStepTest {
   Job jobMock;
 
   ApproveStep.ApproveStepExecution stepExecution;
+  private AutoCloseable closeable;
 
   @Before
   public void setup() throws IOException, InterruptedException {
+    closeable = MockitoAnnotations.openMocks(this);
     when(runMock.getCauses()).thenReturn(null);
     when(runMock.getParent()).thenReturn(jobMock);
     when(taskListenerMock.getLogger()).thenReturn(printStreamMock);
@@ -69,6 +69,11 @@ public class ApproveStepTest {
     when(contextMock.get(Run.class)).thenReturn(runMock);
     when(contextMock.get(TaskListener.class)).thenReturn(taskListenerMock);
     when(contextMock.get(EnvVars.class)).thenReturn(envVarsMock);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    closeable.close();
   }
 
   @Test
