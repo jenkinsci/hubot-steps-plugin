@@ -23,7 +23,7 @@
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
     <java.level>11</java.level>
-    <jenkins.version>2.332.2</jenkins.version>
+    <jenkins.version>2.332.4</jenkins.version>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <retrofit2.version>2.9.0</retrofit2.version>
     <lombok.version>1.18.24</lombok.version>
