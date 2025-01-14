@@ -23,7 +23,9 @@
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
     <java.level>11</java.level>
-    <jenkins.version>2.361.1</jenkins.version>
+    <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
+    <jenkins.baseline>2.361</jenkins.baseline>
+    <jenkins.version>${jenkins.baseline}.1</jenkins.version>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <retrofit2.version>2.9.0</retrofit2.version>
     <lombok.version>1.18.30</lombok.version>
@@ -68,7 +70,7 @@
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.332.x</artifactId>
+        <artifactId>bom-${jenkins.baseline}.x</artifactId>
         <version>1763.v092b_8980a_f5e</version>
         <scope>import</scope>
         <type>pom</type>
