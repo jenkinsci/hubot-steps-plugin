@@ -27,7 +27,7 @@
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <retrofit2.version>2.9.0</retrofit2.version>
     <lombok.version>1.18.30</lombok.version>
-    <assertj-core.version>3.24.2</assertj-core.version>
+    <assertj-core.version>3.27.3</assertj-core.version>
     <wiremock.version>2.27.2</wiremock.version>
   </properties>
   <organization>
