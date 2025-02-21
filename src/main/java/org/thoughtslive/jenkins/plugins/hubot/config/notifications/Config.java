@@ -1,8 +1,11 @@
 package org.thoughtslive.jenkins.plugins.hubot.config.notifications;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
+
+import java.io.Serial;
 import java.io.Serializable;
 import jenkins.model.Jenkins;
 import lombok.Builder;
@@ -15,19 +18,17 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author Naresh Rayapati.
  */
+@Getter
 @ToString
 @Builder
 public class Config implements Describable<Config>, Serializable, Cloneable {
 
+  @Serial
   private static final long serialVersionUID = -8251804333532726515L;
 
-  @Getter
   private final boolean notifyEnabled;
-  @Getter
   private final String roomNames;
-  @Getter
   private final Type notificationType;
-  @Getter
   private final String tokens;
 
   @DataBoundConstructor
@@ -41,7 +42,7 @@ public class Config implements Describable<Config>, Serializable, Cloneable {
 
   @Override
   public Descriptor<Config> getDescriptor() {
-    return Jenkins.getInstance().getDescriptorByType(DescriptorImpl.class);
+    return Jenkins.get().getDescriptorByType(DescriptorImpl.class);
   }
 
   @Override
@@ -54,6 +55,7 @@ public class Config implements Describable<Config>, Serializable, Cloneable {
   @Extension
   public static final class DescriptorImpl extends Descriptor<Config> {
 
+    @NonNull
     @Override
     public String getDisplayName() {
       return "Hubot Notification";

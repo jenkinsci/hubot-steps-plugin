@@ -1,6 +1,7 @@
 package org.thoughtslive.jenkins.plugins.hubot.config;
 
 import com.cloudbees.hudson.plugins.folder.AbstractFolder;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.Util;
@@ -12,7 +13,8 @@ import hudson.model.Job;
 import hudson.model.TaskListener;
 import hudson.model.User;
 import hudson.util.FormValidation;
-import java.io.IOException;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +24,7 @@ import java.util.Map;
 import jenkins.model.Jenkins;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.log4j.Logger;
 import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -39,10 +42,12 @@ import org.thoughtslive.jenkins.plugins.hubot.util.Common;
  * @author Naresh Rayapati
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder
 public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Serializable,
     Cloneable {
 
+  @Serial
   private static final long serialVersionUID = -455439000126041809L;
 
   private static final Logger LOGGER = Logger.getLogger(HubotSite.class.getName());
@@ -111,16 +116,15 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
     // Site from folder(s).
     try {
       while (parent != null) {
-        if (parent instanceof AbstractFolder) {
-          AbstractFolder folder = (AbstractFolder) parent;
-          if (folderName == null) {
+        if (parent instanceof AbstractFolder folder) {
+            if (folderName == null) {
             folderName = folder.getName();
           }
           HubotFolderProperty jfp = (HubotFolderProperty) folder.getProperties()
               .get(HubotFolderProperty.class);
           if (jfp != null) {
             HubotSite[] sites = jfp.getSites();
-            if (sites != null && sites.length > 0) {
+            if (sites != null) {
               for (HubotSite site : sites) {
                 HubotSite cloneSite = site.clone();
                 if (cloneSite.isUseFolderName()) {
@@ -140,8 +144,8 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
           }
         }
 
-        if (parent instanceof Item) {
-          parent = ((Item) parent).getParent();
+        if (parent instanceof Item item) {
+          parent = item.getParent();
         } else {
           parent = null;
         }
@@ -176,15 +180,15 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
   @Override
   public HubotSite clone() throws CloneNotSupportedException {
     super.clone();
-    HubotSite site = HubotSite.builder().defaultSite(this.defaultSite).name(this.name).url(this.url)
+    return HubotSite.builder().defaultSite(this.defaultSite).name(this.name).url(this.url)
         .room(this.room).roomPrefix(this.roomPrefix).failOnError(this.failOnError)
         .useFolderName(this.useFolderName).notifications(this.notifications).build();
-    return site;
   }
 
   @Extension
   public static class DescriptorImpl extends Descriptor<HubotSite> {
 
+    @NonNull
     @Override
     public String getDisplayName() {
       return "Hubot Site";
@@ -198,8 +202,7 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
         @QueryParameter String url,
         @QueryParameter String room,
         @QueryParameter String roomPrefix,
-        @QueryParameter boolean useFolderName)
-        throws IOException {
+        @QueryParameter boolean useFolderName) {
       url = Util.fixEmpty(url);
       name = Util.fixEmpty(name);
       room = Util.fixEmpty(room);
@@ -215,25 +218,23 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
 
       String folderName;
       String folderUrl;
-      Map extraData = new HashMap<String, String>();
-      extraData.put("JENKINS_URL", Jenkins.getInstance().getRootUrl());
+      Map<String, String> extraData = new HashMap<>();
+      extraData.put("JENKINS_URL", Jenkins.get().getRootUrl());
 
-      if (project instanceof AbstractFolder) {
-        AbstractFolder folder = (AbstractFolder) project;
-        folderName = folder.getName();
+      if (project instanceof AbstractFolder folder) {
+          folderName = folder.getName();
         folderUrl = folder.getAbsoluteUrl();
         extraData.put("FOLDER_URL", folderUrl);
 
         // Parent folder(s) sites.
         ItemGroup parent = project.getParent();
         while (parent != null) {
-          if (parent instanceof AbstractFolder) {
-            AbstractFolder parentFolder = (AbstractFolder) parent;
-            folderName = parentFolder.getName() + " » " + folderName;
+          if (parent instanceof AbstractFolder parentFolder) {
+              folderName = parentFolder.getName() + " » " + folderName;
           }
 
-          if (parent instanceof Item) {
-            parent = ((Item) parent).getParent();
+          if (parent instanceof Item item) {
+            parent = item.getParent();
           } else {
             parent = null;
           }
@@ -242,9 +243,8 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
       }
 
       if (useFolderName) {
-        if (project instanceof AbstractFolder) {
-          AbstractFolder folder = (AbstractFolder) project;
-          room = roomPrefix + folder.getName();
+        if (project instanceof AbstractFolder folder) {
+            room = roomPrefix + folder.getName();
         } else {
           if (room == null) {
             return FormValidation
@@ -282,7 +282,7 @@ public class HubotSite extends AbstractDescribableImpl<HubotSite> implements Ser
         HubotSite site = HubotSite.builder().room(room).url(new URL(Common.sanitizeURL(url)))
             .build();
         HubotService service = new HubotService(site);
-        ResponseData response = service.sendMessage(message);
+        ResponseData<Void> response = service.sendMessage(message);
         if (!response.isSuccessful()) {
           return FormValidation.error(
               "Hubot: Error while sending a test message - Error Code: " + response.getCode()

@@ -3,9 +3,9 @@ package org.thoughtslive.jenkins.plugins.hubot.api;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import hudson.EnvVars;
-import hudson.model.ParameterDefinition;
+
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +25,7 @@ import org.thoughtslive.jenkins.plugins.hubot.config.notifications.Type;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Message implements Serializable {
 
+  @Serial
   private static final long serialVersionUID = 7679509189889358976L;
 
   @JsonProperty("message")
@@ -34,7 +35,7 @@ public class Message implements Serializable {
   private String status = Type.SUCCESS.name();
 
   @JsonProperty("extraData")
-  private Map extraData;
+  private Map<String, String> extraData;
 
   @JsonProperty("userName")
   private String userName;
@@ -52,7 +53,7 @@ public class Message implements Serializable {
   private EnvVars envVars;
 
   @JsonProperty("tokens")
-  private Map tokens;
+  private Map<String, String> tokens;
 
   @JsonProperty("ts")
   private long ts;

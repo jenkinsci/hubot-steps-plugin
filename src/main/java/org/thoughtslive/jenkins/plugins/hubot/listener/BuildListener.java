@@ -88,7 +88,7 @@ public class BuildListener extends RunListener<Run<?, ?>> {
         final String buildUserId = Common
             .prepareBuildUserId(run.getCauses(), run.getEnvironment(listener));
 
-        final Map tokens = Common.expandMacros(config.getTokens(), run, null, listener);
+        final Map<String, String> tokens = Common.expandMacros(config.getTokens(), run, null, listener);
 
         Message message = Message.builder().message(type.getStatus())
             .ts(System.currentTimeMillis()).envVars(run.getEnvironment(listener))
