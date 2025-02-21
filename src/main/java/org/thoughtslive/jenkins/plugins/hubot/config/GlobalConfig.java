@@ -1,12 +1,12 @@
 package org.thoughtslive.jenkins.plugins.hubot.config;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.util.CopyOnWriteList;
 import jenkins.model.GlobalConfiguration;
-import lombok.Getter;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 /**
  * Hubot Steps global configuration.
@@ -16,13 +16,13 @@ import org.kohsuke.stapler.StaplerRequest;
 @Extension
 public final class GlobalConfig extends GlobalConfiguration {
 
-  @Getter
   private final CopyOnWriteList<HubotSite> sites = new CopyOnWriteList<>();
 
   public GlobalConfig() {
     load();
   }
 
+  @NonNull
   @Override
   public String getDisplayName() {
     return "Hubot Steps";
@@ -37,7 +37,7 @@ public final class GlobalConfig extends GlobalConfiguration {
   }
 
   @Override
-  public boolean configure(StaplerRequest req, JSONObject formData) {
+  public boolean configure(StaplerRequest2 req, JSONObject formData) {
     Stapler.CONVERT_UTILS.deregister(java.net.URL.class);
     Stapler.CONVERT_UTILS.register(new EmptyFriendlyURLConverter(), java.net.URL.class);
 

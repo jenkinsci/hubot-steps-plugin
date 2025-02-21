@@ -1,11 +1,13 @@
 package org.thoughtslive.jenkins.plugins.hubot.config;
 
 import com.cloudbees.hudson.plugins.folder.AbstractFolder;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.ExtensionPoint;
 import hudson.model.Item;
 import hudson.model.ItemGroup;
 import hudson.model.Job;
+import hudson.model.JobProperty;
 import hudson.model.JobPropertyDescriptor;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
@@ -22,16 +24,15 @@ import org.kohsuke.stapler.DataBoundConstructor;
  *
  * @author Naresh Rayapati
  */
+@Getter
 @Builder
-public class HubotJobProperty extends hudson.model.JobProperty implements ExtensionPoint {
+public class HubotJobProperty extends JobProperty implements ExtensionPoint {
 
   private static final Logger LOGGER = Logger.getLogger(HubotJobProperty.class.getName());
 
   // TODO - Update to select multiple sites for now I didn't find a way to multiselect in Jenkins.
-  @Getter
   public final String siteNames;
 
-  @Getter
   private boolean enableNotifications;
 
   @DataBoundConstructor
@@ -49,11 +50,11 @@ public class HubotJobProperty extends hudson.model.JobProperty implements Extens
   public static class DescriptorImpl extends JobPropertyDescriptor {
 
     @Override
-    @SuppressWarnings("unchecked")
     public boolean isApplicable(Class<? extends Job> jobType) {
       return Job.class.isAssignableFrom(jobType);
     }
 
+    @NonNull
     @Override
     public String getDisplayName() {
       return "Hubot Job Property";
@@ -69,9 +70,8 @@ public class HubotJobProperty extends hudson.model.JobProperty implements Extens
       // Parent folder(s) sites.
       ItemGroup parent = project.getParent();
       while (parent != null) {
-        if (parent instanceof AbstractFolder) {
-          AbstractFolder folder = (AbstractFolder) parent;
-          if (folderName == null) {
+        if (parent instanceof AbstractFolder folder) {
+            if (folderName == null) {
             folderName = folder.getName();
           } else {
             folderName = folder.getName() + " » " + folderName;
@@ -80,7 +80,7 @@ public class HubotJobProperty extends hudson.model.JobProperty implements Extens
               .get(HubotFolderProperty.class);
           if (jfp != null) {
             HubotSite[] sites = jfp.getSites();
-            if (sites != null && sites.length > 0) {
+            if (sites != null) {
               for (HubotSite site : sites) {
                 hubotSites.add(new Option(folderName + " - " + site.getName(), site.getName()));
               }
@@ -88,8 +88,8 @@ public class HubotJobProperty extends hudson.model.JobProperty implements Extens
           }
         }
 
-        if (parent instanceof Item) {
-          parent = ((Item) parent).getParent();
+        if (parent instanceof Item item) {
+          parent = item.getParent();
         } else {
           parent = null;
         }

@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.54</version>
+    <version>5.7</version>
   </parent>
   <artifactId>hubot-steps</artifactId>
   <version>${changelist}</version>
@@ -16,21 +16,21 @@
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
-    <java.level>11</java.level>
     <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
-    <jenkins.baseline>2.361</jenkins.baseline>
+    <jenkins.baseline>2.479</jenkins.baseline>
     <jenkins.version>${jenkins.baseline}.1</jenkins.version>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <retrofit2.version>2.11.0</retrofit2.version>
+    <!-- must match okhttp version from retrofit -->
+    <mockwebserver.version>3.14.9</mockwebserver.version>
     <lombok.version>1.18.36</lombok.version>
     <assertj-core.version>3.27.3</assertj-core.version>
-    <wiremock.version>2.27.2</wiremock.version>
   </properties>
   <organization>
     <name>ThoughtsLive</name>
@@ -71,7 +71,7 @@
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
         <artifactId>bom-${jenkins.baseline}.x</artifactId>
-        <version>1763.v092b_8980a_f5e</version>
+        <version>4136.vca_c3202a_7fd1</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -126,12 +126,7 @@
     <!-- Test Dependencies -->
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-inline</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -141,36 +136,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.squareup.okhttp</groupId>
+      <groupId>com.squareup.okhttp3</groupId>
       <artifactId>mockwebserver</artifactId>
-      <version>2.7.5</version>
+      <version>${mockwebserver.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <profiles>
-    <profile>
-      <id>doclint-java8-disable</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <additionalparam>-Xdoclint:none</additionalparam>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.jenkins-ci.tools</groupId>
-            <artifactId>maven-hpi-plugin</artifactId>
-            <configuration>
-              <compatibleSinceVersion>2.0.0</compatibleSinceVersion>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
+
 </project>

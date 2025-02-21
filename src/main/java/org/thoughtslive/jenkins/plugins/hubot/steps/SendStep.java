@@ -2,6 +2,7 @@ package org.thoughtslive.jenkins.plugins.hubot.steps;
 
 import com.cloudbees.hudson.plugins.folder.AbstractFolder;
 import com.google.common.collect.ImmutableSet;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
@@ -12,6 +13,7 @@ import hudson.model.TaskListener;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ import org.thoughtslive.jenkins.plugins.hubot.util.HubotAbstractSynchronousNonBl
  */
 public class SendStep extends BasicHubotStep {
 
+  @Serial
   private static final long serialVersionUID = 5310947910434533239L;
 
   @DataBoundConstructor
@@ -58,6 +61,7 @@ public class SendStep extends BasicHubotStep {
       return "hubotSend";
     }
 
+    @NonNull
     @Override
     public String getDisplayName() {
       return "Hubot: Send message";
@@ -79,9 +83,8 @@ public class SendStep extends BasicHubotStep {
       if (project != null) {
         ItemGroup parent = project.getParent();
         while (parent != null) {
-          if (parent instanceof AbstractFolder) {
-            AbstractFolder folder = (AbstractFolder) parent;
-            if (folderName == null) {
+          if (parent instanceof AbstractFolder folder) {
+              if (folderName == null) {
               folderName = folder.getName();
             } else {
               folderName = folder.getName() + " » " + folderName;
@@ -90,7 +93,7 @@ public class SendStep extends BasicHubotStep {
                 .get(HubotFolderProperty.class);
             if (jfp != null) {
               HubotSite[] sites = jfp.getSites();
-              if (sites != null && sites.length > 0) {
+              if (sites != null) {
                 for (HubotSite site : sites) {
                   hubotSites.add(new Option(folderName + " - " + site.getName(), site.getName()));
                 }
@@ -98,8 +101,8 @@ public class SendStep extends BasicHubotStep {
             }
           }
 
-          if (parent instanceof Item) {
-            parent = ((Item) parent).getParent();
+          if (parent instanceof Item item) {
+            parent = item.getParent();
           } else {
             parent = null;
           }
@@ -118,6 +121,7 @@ public class SendStep extends BasicHubotStep {
   public static class SendStepExecution
       extends HubotAbstractSynchronousNonBlockingStepExecution<Boolean> {
 
+    @Serial
     private static final long serialVersionUID = -7049396675002254309L;
 
     private final SendStep step;
@@ -144,7 +148,7 @@ public class SendStep extends BasicHubotStep {
         }
 
         FilePath ws = getContext().get(FilePath.class);
-        final Map tokens = Common.expandMacros(step.getTokens(), run, ws, listener);
+        final Map<String, String> tokens = Common.expandMacros(step.getTokens(), run, ws, listener);
 
         final Message message = Message.builder().message(step.getMessage()).userName(buildUserName)
             .userId(buildUserId).envVars(envVars)

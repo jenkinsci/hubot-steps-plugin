@@ -3,9 +3,9 @@
  import static org.assertj.core.api.Assertions.assertThat;
 
  import com.fasterxml.jackson.databind.ObjectMapper;
-  import com.squareup.okhttp.HttpUrl;
- import com.squareup.okhttp.mockwebserver.MockResponse;
- import com.squareup.okhttp.mockwebserver.MockWebServer;
+ import okhttp3.HttpUrl;
+ import okhttp3.mockwebserver.MockResponse;
+ import okhttp3.mockwebserver.MockWebServer;
  import org.junit.After;
  import org.junit.Before;
  import org.junit.Test;

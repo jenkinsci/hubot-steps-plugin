@@ -9,6 +9,7 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Serial;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
@@ -28,6 +29,7 @@ import org.thoughtslive.jenkins.plugins.hubot.steps.BasicHubotStep;
 public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
     extends SynchronousNonBlockingStepExecution<T> {
 
+  @Serial
   private static final long serialVersionUID = -6557391471762434587L;
 
   protected transient PrintStream logger = null;
@@ -52,7 +54,6 @@ public abstract class HubotAbstractSynchronousNonBlockingStepExecution<T>
     envVars = context.get(EnvVars.class);
   }
 
-  @SuppressWarnings("hiding")
   protected <T> ResponseData<T> verifyCommon(final BasicHubotStep step) {
 
     logger = listener.getLogger();

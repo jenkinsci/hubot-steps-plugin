@@ -81,7 +81,7 @@ public class Common {
    * @return an instance of {@link ResponseData}
    */
   public static <T> ResponseData<T> parseResponse(final Response<T> response) throws IOException {
-    final ResponseData<T> resData = new ResponseData<T>();
+    final ResponseData<T> resData = new ResponseData<>();
     resData.setSuccessful(response.isSuccessful());
     resData.setCode(response.code());
     resData.setMessage(response.message());
@@ -101,7 +101,7 @@ public class Common {
    * @return an instance of {@link ResponseData}
    */
   public static <T> ResponseData<T> buildErrorResponse(final Exception e) {
-    final ResponseData<T> resData = new ResponseData<T>();
+    final ResponseData<T> resData = new ResponseData<>();
     final String errorMessage = getRootCause(e).getMessage();
     resData.setSuccessful(false);
     resData.setCode(-1);
@@ -137,11 +137,11 @@ public class Common {
       return envVars.get("CHANGE_AUTHOR");
     }
 
-    if (causes != null && causes.size() > 0) {
-      if (causes.get(0) instanceof UserIdCause) {
-        buildUser = ((UserIdCause) causes.get(0)).getUserName();
-      } else if (causes.get(0) instanceof UpstreamCause) {
-        List<Cause> upstreamCauses = ((UpstreamCause) causes.get(0)).getUpstreamCauses();
+    if (causes != null && !causes.isEmpty()) {
+      if (causes.get(0) instanceof UserIdCause userIdCause) {
+        buildUser = userIdCause.getUserName();
+      } else if (causes.get(0) instanceof UpstreamCause upstreamCause) {
+        List<Cause> upstreamCauses = upstreamCause.getUpstreamCauses();
         buildUser = prepareBuildUserName(upstreamCauses, envVars);
       }
     }
@@ -156,13 +156,13 @@ public class Common {
   public static String prepareBuildCause(List<Cause> causes) {
     String buildCause = null;
 
-    if (causes != null && causes.size() > 0) {
+    if (causes != null && !causes.isEmpty()) {
       for (Cause cause : causes) {
 
-        if (cause instanceof UserIdCause) {
-          buildCause = ((UserIdCause) causes.get(0)).getUserName();
-        } else if (cause instanceof UpstreamCause) {
-          List<Cause> upstreamCauses = ((UpstreamCause) cause).getUpstreamCauses();
+        if (cause instanceof UserIdCause userIdCause) {
+          buildCause = userIdCause.getUserName();
+        } else if (cause instanceof UpstreamCause upstreamCause) {
+          List<Cause> upstreamCauses = upstreamCause.getUpstreamCauses();
           buildCause = prepareBuildCause(upstreamCauses);
         } else {
           buildCause = cause.getClass().getSimpleName();
@@ -182,11 +182,11 @@ public class Common {
   public static String prepareBuildUserId(List<Cause> causes, EnvVars envVars) {
     String buildUserId = null;
 
-    if (causes != null && causes.size() > 0) {
-      if (causes.get(0) instanceof UserIdCause) {
-        buildUserId = ((UserIdCause) causes.get(0)).getUserId();
-      } else if (causes.get(0) instanceof UpstreamCause) {
-        List<Cause> upstreamCauses = ((UpstreamCause) causes.get(0)).getUpstreamCauses();
+    if (causes != null && !causes.isEmpty()) {
+      if (causes.get(0) instanceof UserIdCause userIdCause) {
+        buildUserId = userIdCause.getUserId();
+      } else if (causes.get(0) instanceof UpstreamCause upstreamCause) {
+        List<Cause> upstreamCauses = upstreamCause.getUpstreamCauses();
         buildUserId = prepareBuildUserId(upstreamCauses, envVars);
       }
     }
@@ -197,8 +197,8 @@ public class Common {
    * Expands given macro, see Token Marco plugin.
    */
   @SuppressFBWarnings
-  public static Map expandMacros(String tokens, Run<?, ?> run, FilePath ws, TaskListener listener) {
-    Map tokenMap = new HashMap<String, String>();
+  public static Map<String, String> expandMacros(String tokens, Run<?, ?> run, FilePath ws, TaskListener listener) {
+    Map<String, String> tokenMap = new HashMap<>();
     if (Util.fixEmpty(tokens) != null) {
       for (String token : tokens.split(",")) {
         token = token.trim();
@@ -219,7 +219,6 @@ public class Common {
    *
    * @return response data.
    */
-  @SuppressWarnings("hiding")
   public static <T> ResponseData<T> logResponse(ResponseData<T> response, final PrintStream logger,
       final boolean failOnError) throws AbortException {
 

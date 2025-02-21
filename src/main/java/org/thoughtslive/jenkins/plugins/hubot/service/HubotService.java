@@ -6,7 +6,6 @@ import static org.thoughtslive.jenkins.plugins.hubot.util.Common.sanitizeURL;
 
 import hudson.Util;
 import okhttp3.OkHttpClient;
-import org.apache.log4j.Logger;
 import org.thoughtslive.jenkins.plugins.hubot.api.Message;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
 import org.thoughtslive.jenkins.plugins.hubot.config.HubotSite;
@@ -20,8 +19,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
  * @author Naresh Rayapati
  */
 public class HubotService {
-
-  private static final Logger LOGGER = Logger.getLogger(HubotService.class.getName());
 
   private final HubotEndPoints hubotEndPoints;
   private final HubotSite hubotSite;

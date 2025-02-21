@@ -53,7 +53,7 @@ public enum Type {
     }
   };
 
-  public static final Type fromResults(Result previousResult, Result result) {
+  public static Type fromResults(Result previousResult, Result result) {
     if (result == Result.ABORTED) {
       return ABORTED;
     } else if (result == Result.FAILURE) {

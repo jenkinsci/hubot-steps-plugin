@@ -7,10 +7,10 @@ import org.junit.Test;
 public class MessageTest {
 
   @Test
-  public void testToString() throws Exception {
+  public void testToString() {
     final Message message = Message.builder().message("actualMessage").build();
 
-    assertThat(message.toString()).isEqualTo(
+    assertThat(message).hasToString(
         "Message(message=actualMessage, status=null, extraData=null, userName=null, buildCause=null, userId=null, stepName=null, envVars=null, tokens=null, ts=0, id=null, submitter=null, submitterParameter=null, ok=null, parameters=null)");
   }
 }

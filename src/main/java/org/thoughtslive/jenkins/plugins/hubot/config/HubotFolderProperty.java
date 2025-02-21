@@ -6,12 +6,11 @@ import com.cloudbees.hudson.plugins.folder.AbstractFolderPropertyDescriptor;
 import hudson.Extension;
 import hudson.util.CopyOnWriteList;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import lombok.Getter;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 /**
  * Provides folder level Hubot configuration.
@@ -20,7 +19,6 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class HubotFolderProperty extends AbstractFolderProperty<AbstractFolder<?>> {
 
-  @Getter
   private final CopyOnWriteList<HubotSite> sites = new CopyOnWriteList<>();
 
   @DataBoundConstructor
@@ -28,7 +26,7 @@ public class HubotFolderProperty extends AbstractFolderProperty<AbstractFolder<?
   }
 
   @Override
-  public AbstractFolderProperty<?> reconfigure(StaplerRequest req, JSONObject formData) {
+  public AbstractFolderProperty<?> reconfigure(StaplerRequest2 req, JSONObject formData) {
     if (formData == null) {
       return null;
     }

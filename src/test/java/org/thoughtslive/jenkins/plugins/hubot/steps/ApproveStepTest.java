@@ -19,7 +19,6 @@ import org.jenkinsci.plugins.workflow.steps.StepContext;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
@@ -87,9 +86,7 @@ public class ApproveStepTest {
     when(envVarsMock.get("HUBOT_URL")).thenReturn("");
 
     // Execute and assert Test.
-    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
-      stepExecution.start();
-    }).withMessage("Hubot: HUBOT_URL or step parameter equivalent is empty or null.")
+    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> stepExecution.start()).withMessage("Hubot: HUBOT_URL or step parameter equivalent is empty or null.")
         .withStackTraceContaining("AbortException")
         .withNoCause();
   }
@@ -102,9 +99,7 @@ public class ApproveStepTest {
     stepExecution.setHubotService(hubotServiceMock);
 
     // Execute and assert Test.
-    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
-      stepExecution.start();
-    }).withMessage("Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.")
+    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> stepExecution.start()).withMessage("Hubot: HUBOT_DEFAULT_ROOM or step parameter equivalent is empty or null.")
         .withStackTraceContaining("AbortException")
         .withNoCause();
   }
@@ -117,9 +112,7 @@ public class ApproveStepTest {
     stepExecution.setHubotService(hubotServiceMock);
 
     // Execute and assert Test.
-    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
-      stepExecution.start();
-    }).withMessage("Hubot: Message is empty or null.").withStackTraceContaining("AbortException")
+    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> stepExecution.start()).withMessage("Hubot: Message is empty or null.").withStackTraceContaining("AbortException")
         .withNoCause();
   }
 
@@ -135,9 +128,7 @@ public class ApproveStepTest {
         .thenReturn(builder.successful(false).code(400).error("fake error.").build());
 
     // Assert Test
-    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
-      stepExecution.start();
-    }).withMessage("fake error.").withStackTraceContaining("AbortException").withNoCause();
+    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> stepExecution.start()).withMessage("fake error.").withStackTraceContaining("AbortException").withNoCause();
   }
 
   @Test
@@ -162,13 +153,11 @@ public class ApproveStepTest {
     stepExecution.setHubotService(hubotServiceMock);
 
     // Execute Test. TODO Mock InputStep too.
-    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> {
-      stepExecution.start();
-    }).withMessageStartingWith("Error while sending message:")
+    assertThatExceptionOfType(AbortException.class).isThrownBy(() -> stepExecution.start()).withMessageStartingWith("Error while sending message:")
         .withStackTraceContaining("AbortException").withNoCause();
 
     // Assert Test
     verify(hubotServiceMock, times(1)).sendMessage(any());
-    assertThat(step.getFailOnError()).isEqualTo(null);
+    assertThat(step.getFailOnError()).isNull();
   }
 }

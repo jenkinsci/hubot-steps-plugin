@@ -2,6 +2,7 @@ package org.thoughtslive.jenkins.plugins.hubot.steps;
 
 import com.cloudbees.hudson.plugins.folder.AbstractFolder;
 import com.google.common.collect.ImmutableSet;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.AbortException;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -15,6 +16,7 @@ import hudson.model.TaskListener;
 import hudson.util.ListBoxModel;
 import hudson.util.ListBoxModel.Option;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,35 +40,32 @@ import org.thoughtslive.jenkins.plugins.hubot.config.notifications.Type;
 import org.thoughtslive.jenkins.plugins.hubot.util.Common;
 import org.thoughtslive.jenkins.plugins.hubot.util.Common.STEP;
 import org.thoughtslive.jenkins.plugins.hubot.util.HubotStepExecution;
-import com.fasterxml.jackson.databind.ObjectMapper; 
-import com.fasterxml.jackson.databind.ObjectWriter; 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
  * Sends an approval message to Hubot.
  *
  * @author Naresh Rayapati.
  */
+@Getter
 public class ApproveStep extends BasicHubotStep {
 
+  @Serial
   private static final long serialVersionUID = 2750983740619607854L;
 
-  @Getter
   @DataBoundSetter
   private String id;
 
-  @Getter
   @DataBoundSetter
   private String submitter;
 
-  @Getter
   @DataBoundSetter
   private String ok;
 
-  @Getter
   @DataBoundSetter
   private String submitterParameter;
 
-  @Getter
   @DataBoundSetter
   private List<ParameterDefinition> parameters = Collections.emptyList();
 
@@ -88,6 +87,7 @@ public class ApproveStep extends BasicHubotStep {
       return "hubotApprove";
     }
 
+    @NonNull
     @Override
     public String getDisplayName() {
       return "Hubot: Send approval message";
@@ -109,9 +109,8 @@ public class ApproveStep extends BasicHubotStep {
       if (project != null) {
         ItemGroup parent = project.getParent();
         while (parent != null) {
-          if (parent instanceof AbstractFolder) {
-            AbstractFolder folder = (AbstractFolder) parent;
-            if (folderName == null) {
+          if (parent instanceof AbstractFolder folder) {
+              if (folderName == null) {
               folderName = folder.getName();
             } else {
               folderName = folder.getName() + " » " + folderName;
@@ -120,7 +119,7 @@ public class ApproveStep extends BasicHubotStep {
                 .get(HubotFolderProperty.class);
             if (jfp != null) {
               HubotSite[] sites = jfp.getSites();
-              if (sites != null && sites.length > 0) {
+              if (sites != null) {
                 for (HubotSite site : sites) {
                   hubotSites.add(new Option(folderName + " - " + site.getName(), site.getName()));
                 }
@@ -128,8 +127,8 @@ public class ApproveStep extends BasicHubotStep {
             }
           }
 
-          if (parent instanceof Item) {
-            parent = ((Item) parent).getParent();
+          if (parent instanceof Item item) {
+            parent = item.getParent();
           } else {
             parent = null;
           }
@@ -147,6 +146,7 @@ public class ApproveStep extends BasicHubotStep {
 
   public static class ApproveStepExecution extends HubotStepExecution<ResponseData<Void>> {
 
+    @Serial
     private static final long serialVersionUID = 5535327378092782313L;
 
     private final ApproveStep step;
@@ -175,7 +175,7 @@ public class ApproveStep extends BasicHubotStep {
         }
 
         FilePath ws = getContext().get(FilePath.class);
-        final Map tokens = Common.expandMacros(step.getTokens(), run, ws, listener);
+        final Map<String, String> tokens = Common.expandMacros(step.getTokens(), run, ws, listener);
         final String stepId = Util.fixEmpty(step.getId()) == null ? "Proceed" : step.getId().trim();
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -223,7 +223,7 @@ public class ApproveStep extends BasicHubotStep {
     }
 
     @Override
-    public void stop(Throwable cause) throws Exception {
+    public void stop(@NonNull Throwable cause) throws Exception {
       if (inputExecution != null) {
         inputExecution.stop(cause);
       }
