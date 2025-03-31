@@ -28,7 +28,7 @@
     <jenkins.version>${jenkins.baseline}.1</jenkins.version>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
     <retrofit2.version>2.11.0</retrofit2.version>
-    <lombok.version>1.18.36</lombok.version>
+    <lombok.version>1.18.38</lombok.version>
     <assertj-core.version>3.27.3</assertj-core.version>
     <wiremock.version>2.27.2</wiremock.version>
   </properties>
