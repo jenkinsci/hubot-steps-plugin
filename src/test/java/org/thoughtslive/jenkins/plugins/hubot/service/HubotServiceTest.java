@@ -6,9 +6,9 @@
   import com.squareup.okhttp.HttpUrl;
  import com.squareup.okhttp.mockwebserver.MockResponse;
  import com.squareup.okhttp.mockwebserver.MockWebServer;
- import org.junit.After;
- import org.junit.Before;
- import org.junit.Test;
+ import org.junit.jupiter.api.AfterEach;
+ import org.junit.jupiter.api.BeforeEach;
+ import org.junit.jupiter.api.Test;
  import org.thoughtslive.jenkins.plugins.hubot.api.Message;
  import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
  import org.thoughtslive.jenkins.plugins.hubot.config.HubotSite;
@@ -24,7 +24,7 @@
    public HubotService hubotService;
    private MockWebServer server;
 
-   @Before
+   @BeforeEach
    public void setUp() throws Exception {
      server = new MockWebServer();
      server.start();
@@ -34,7 +34,7 @@
      hubotService = new HubotService(site);
    }
 
-   @After
+   @AfterEach
    public void tearDown() throws Exception {
        server.shutdown();
    }
