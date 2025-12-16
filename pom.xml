@@ -27,6 +27,7 @@
     <jenkins.baseline>2.479</jenkins.baseline>
     <jenkins.version>${jenkins.baseline}.3</jenkins.version>
     <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
+    <ban-junit4-imports.skip>false</ban-junit4-imports.skip>
     <retrofit2.version>2.11.0</retrofit2.version>
     <lombok.version>1.18.36</lombok.version>
     <assertj-core.version>3.27.3</assertj-core.version>

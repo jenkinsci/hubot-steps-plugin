@@ -16,10 +16,9 @@ import hudson.model.TaskListener;
 import java.io.IOException;
 import java.io.PrintStream;
 import org.jenkinsci.plugins.workflow.steps.StepContext;
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.thoughtslive.jenkins.plugins.hubot.api.ResponseData;
@@ -51,7 +50,7 @@ public class ApproveStepTest {
   ApproveStep.ApproveStepExecution stepExecution;
   private AutoCloseable closeable;
 
-  @Before
+  @BeforeEach
   public void setup() throws IOException, InterruptedException {
     closeable = MockitoAnnotations.openMocks(this);
     when(runMock.getCauses()).thenReturn(null);
@@ -71,7 +70,7 @@ public class ApproveStepTest {
     when(contextMock.get(EnvVars.class)).thenReturn(envVarsMock);
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     closeable.close();
   }
